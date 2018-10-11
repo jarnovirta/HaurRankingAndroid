@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Haur Ranking Android</string>
+    <!--Main activity -->
+    <string name="match_label">Match:</string>
+    <string name="select_file_button">Select PractiScore Export File</string>
+
 </resources>

@@ -1,29 +1,29 @@
 package haur.haurrankingandroid;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import haur.haurrankingandroid.haur.haurranking.service.FileService;
+import haur.haurrankingandroid.pdf.PdfGenerator;
 
 public class MainActivity extends AppCompatActivity {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
+	private TextView matchNameTextView;
+	private Button selectFileButton;
+
+	private final int CHOOSE_FILE_REQUEST_CODE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +31,9 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Log.d("MainActivity", "*** REQUESTING PERMISSIONS");
-		ActivityCompat.requestPermissions(this,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-						Manifest.permission.READ_EXTERNAL_STORAGE},
-				PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
-
+		getPermissions();
+		matchNameTextView = findViewById(R.id.match_name);
+		setButtonClickListeners();
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 				if (grantResults.length > 0
 						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					Log.d("MainActivity", "App permissions granted");
-					generatePdf();
+					PdfGenerator.generatePdf();
 				} else {
 					Log.d("MainActivity", "App permissions not granted. Exiting.");
 					finish();
@@ -55,49 +53,38 @@ public class MainActivity extends AppCompatActivity {
 			}
 		}
 	}
-
-	private void generatePdf() {
-		/**
-		 * Creating Document
-		 */
-		try {
-		String fname ="rankingtest";
-		String fpath = "/sdcard/" + fname + ".pdf";
-		File file = new File(fpath);
-		if (!file.exists()) {
-			file.createNewFile(); }
-		Log.d("Main", "\n***Created file");
-		Document document = new Document();
-// Location to save
-		PdfWriter.getInstance(document, new FileOutputStream(file.getAbsoluteFile()));
-			Log.d("Main", "\n***Opened PdfWriter");
-// Open to write
-		document.open();
-
-			Log.d("Main", "\n***Document open. Setting page size");
-		// Document Settings
-		document.setPageSize(PageSize.A4);
-
-		Log.d("Main", "\n*** Setting creation date");
-		document.addCreationDate();
-		document.addAuthor("Android School");
-		document.addCreator("Pratik Butani");
-
-
-			Log.d("Main", "\n***Adding paragraph");
-			document.add(new Paragraph("test"));
-			document.add(new Chunk("Test chunk"));
-			Log.d("Main", "\n***Closing");
-			document.close();
-
-			Log.d("Main", "File done");
-
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == CHOOSE_FILE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+			if (data.getData() != null) {
+				Log.d("MainActivity", "Got data from Activity. Setting file path");
+				FileService.setPractiScoreExportFilePath(data.getData());
+				Log.d("MainActivity", "Setting text field. ");
+				matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
+			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+	}
+	private void setButtonClickListeners() {
+		selectFileButton = findViewById(R.id.select_file_button);
+		selectFileButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				intent.setType("*/*");
+				startActivityForResult(intent, CHOOSE_FILE_REQUEST_CODE);
+			}
+		});
+	}
+	private void getPermissions() {
+		if (Build.VERSION.SDK_INT >= 23 &&
+				ContextCompat.checkSelfPermission(this,
+						Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+				ContextCompat.checkSelfPermission(this,
+						Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+			ActivityCompat.requestPermissions(this,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+							Manifest.permission.READ_EXTERNAL_STORAGE},
+					PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
 		}
-
-
 	}
 }
