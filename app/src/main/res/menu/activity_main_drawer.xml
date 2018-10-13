@@ -5,18 +5,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_ranking"
+            android:id="@+id/nav_ranking_list"
             android:icon="@drawable/ic_ranking"
-            android:title="Ranking" />
+            android:title="@string/nav_option_ranking_list" />
 
         <item
             android:id="@+id/nav_save_ranking"
             android:icon="@drawable/ic_pdf"
-            android:title="Tallenna ranking" />
+            android:title="@string/nav_save_ranking" />
 
     </group>
 
-    <item android:title="Tietokanta">
+    <item android:title="@string/nav_group_database">
         <menu>
             <item
                 android:id="@+id/nav_import_results"
@@ -25,11 +25,11 @@
             <item
                 android:id="@+id/nav_db_classifiers"
                 android:icon="@drawable/ic_classifiers"
-                android:title="Luokitteluammunnat" />
+                android:title="@string/nav_db_classifiers" />
             <item
                 android:id="@+id/nav_db_competitors"
                 android:icon="@drawable/ic_competitors"
-                android:title="Ampujat" />
+                android:title="@string/nav_db_competitors" />
         </menu>
     </item>
 

@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.domain;
+package haur.haurrankingandroid.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

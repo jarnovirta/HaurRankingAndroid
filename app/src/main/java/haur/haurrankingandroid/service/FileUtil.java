@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.service;
+package haur.haurrankingandroid.service;
 
 import android.content.ContentUris;
 import android.content.Context;

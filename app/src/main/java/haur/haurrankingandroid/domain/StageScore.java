@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.domain;
+package haur.haurrankingandroid.domain;
 
 import java.util.List;
 

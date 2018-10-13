@@ -1,4 +1,4 @@
-package haur.haurrankingandroid;
+package haur.haurrankingandroid.activity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import haur.haurrankingandroid.R;
 
 /**
  * Created by Jarno on 13.10.2018.

@@ -1,21 +1,19 @@
-package haur.haurrankingandroid;
+package haur.haurrankingandroid.activity.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.haur.haurranking.service.FileService;
+import haur.haurrankingandroid.service.FileService;
 
 /**
  * Created by Jarno on 13.10.2018.

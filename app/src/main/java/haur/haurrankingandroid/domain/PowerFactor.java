@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.domain;
+package haur.haurrankingandroid.domain;
 
 /**
  * Created by Jarno on 11.10.2018.

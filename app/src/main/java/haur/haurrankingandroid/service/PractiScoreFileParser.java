@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.service;
+package haur.haurrankingandroid.service;
 
 import android.util.Log;
 
@@ -14,8 +14,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import haur.haurrankingandroid.haur.haurranking.domain.Match;
-import haur.haurrankingandroid.haur.haurranking.domain.MatchScore;
+import haur.haurrankingandroid.domain.Match;
+import haur.haurrankingandroid.domain.MatchScore;
 
 /**
  * Created by Jarno on 11.10.2018.

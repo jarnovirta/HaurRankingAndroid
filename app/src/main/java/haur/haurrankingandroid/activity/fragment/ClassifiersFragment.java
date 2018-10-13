@@ -1,4 +1,4 @@
-package haur.haurrankingandroid;
+package haur.haurrankingandroid.activity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import haur.haurrankingandroid.R;
+
 /**
  * Created by Jarno on 13.10.2018.
  */
 
-public class RankingFragment extends Fragment {
+public class ClassifiersFragment extends Fragment {
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,7 +24,7 @@ public class RankingFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_ranking, container, false);
+		View view = inflater.inflate(R.layout.fragment_classifiers, container, false);
 
 		return view;
 	}

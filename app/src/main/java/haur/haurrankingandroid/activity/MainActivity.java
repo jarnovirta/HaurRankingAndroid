@@ -1,4 +1,4 @@
-package haur.haurrankingandroid;
+package haur.haurrankingandroid.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -17,6 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.activity.fragment.ClassifiersFragment;
+import haur.haurrankingandroid.activity.fragment.CompetitorsFragment;
+import haur.haurrankingandroid.activity.fragment.ImportFragment;
+import haur.haurrankingandroid.activity.fragment.RankingFragment;
 import haur.haurrankingandroid.pdf.PdfGenerator;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,14 +98,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		Log.d("TEST", "\no ** OPTIONSITEM SELECTED");
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.action_exit) {
+			finish();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	public boolean onNavigationItemSelected(MenuItem item) {
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
-		if (id == R.id.nav_ranking) {
+		if (id == R.id.nav_ranking_list) {
 			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 					new RankingFragment()).commit();
 		}

@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.haur.haurranking.service;
+package haur.haurrankingandroid.service;
 
 import android.net.Uri;
 import android.util.Log;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import haur.haurrankingandroid.RankingAppContext;
-import haur.haurrankingandroid.haur.haurranking.domain.Match;
+import haur.haurrankingandroid.domain.Match;
 
 /**
  * Created by Jarno on 11.10.2018.

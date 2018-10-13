@@ -1,11 +1,25 @@
 <resources>
-    <string name="app_name">Haur Ranking</string>
+    <string name="app_name">HAUR Ranking</string>
 
 
     <!--Main activity -->
     <string name="match_label">Kilpailu:</string>
+
+    <!--Toolbar-->
+    <string name="action_exit">Sulje ohjelma</string>
+
+    <!--Navigation Drawer-->
+    <string name="nav_option_ranking_list">Ranking</string>
+    <string name="nav_save_ranking">Tallenna ranking</string>
+    <string name="nav_group_database">Tietokanta</string>
+    <string name="nav_import_results">Tuo tuloksia</string>
+    <string name="nav_db_classifiers">Luokitteluammunnat</string>
+    <string name="nav_db_competitors">Ampujat</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_exit">Sulje ohjelma</string>
+
+
+
 
 </resources>
