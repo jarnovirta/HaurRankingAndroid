@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_ranking"
+            android:icon="@drawable/ic_ranking"
+            android:title="Ranking" />
+
+        <item
+            android:id="@+id/nav_save_ranking"
+            android:icon="@drawable/ic_pdf"
+            android:title="Tallenna ranking" />
+
+    </group>
+
+    <item android:title="Tietokanta">
+        <menu>
+            <item
+                android:id="@+id/nav_import_results"
+                android:icon="@drawable/ic_import"
+                android:title="Tuo tuloksia" />
+            <item
+                android:id="@+id/nav_db_classifiers"
+                android:icon="@drawable/ic_classifiers"
+                android:title="Luokitteluammunnat" />
+            <item
+                android:id="@+id/nav_db_competitors"
+                android:icon="@drawable/ic_competitors"
+                android:title="Ampujat" />
+        </menu>
+    </item>
+
+</menu>
