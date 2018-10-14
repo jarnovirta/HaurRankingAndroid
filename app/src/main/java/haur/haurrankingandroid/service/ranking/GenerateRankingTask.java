@@ -89,6 +89,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			}
 
 			Collections.sort(competitorRelativeResults);
+			Collections.reverse(competitorRelativeResults);
 			if (competitorRelativeResults.size() > 4) {
 				competitorRelativeResults = competitorRelativeResults.subList(0, 4);
 			}
@@ -122,6 +123,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			rows.add(new DivisionRankingRow(comp, competitorAveragesMap.get(comp)));
 		}
 		Collections.sort(rows);
+		Collections.reverse(rows);
 		return rows;
 	}
 
