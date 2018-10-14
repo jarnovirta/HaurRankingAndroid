@@ -23,13 +23,10 @@ public class PdfGenerator {
 		 */
 		try {
 			String fname ="rankingtest";
-			String directoryPath = "/sdcard/HaurRanking/";
+			String directoryPath = "/sdcard/HaurRanking/pdf";
 
 			String fpath = directoryPath + fname + ".pdf";
-			File directory = new File(directoryPath);
-			if (!directory.exists()) {
-				directory.mkdir();
-			}
+
 			File file = new File(fpath);
 			if (!file.exists()) {
 				file.createNewFile(); }

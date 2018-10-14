@@ -18,11 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.activity.fragment.ClassifiersFragment;
 import haur.haurrankingandroid.activity.fragment.CompetitorsFragment;
 import haur.haurrankingandroid.activity.fragment.ImportFragment;
 import haur.haurrankingandroid.activity.fragment.RankingFragment;
+import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.pdf.PdfGenerator;
+import haur.haurrankingandroid.service.FileService;
+import haur.haurrankingandroid.service.RankingService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
@@ -30,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		RankingService.getRanking();
+		FileService.createDirectoriesIfNotExist();
+
 		setContentView(R.layout.activity_main);
 		getPermissions();
 		Toolbar toolbar = findViewById(R.id.toolbar);
@@ -46,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 				new RankingFragment()).commit();
+
 	}
 
 	@Override
@@ -119,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
 					new ImportFragment()).commit();
 		} else if (id == R.id.nav_db_classifiers) {
-			Log.d("TEST", "Classifiers");
 			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 					new ClassifiersFragment()).commit();
 		} else if (id == R.id.nav_db_competitors) {

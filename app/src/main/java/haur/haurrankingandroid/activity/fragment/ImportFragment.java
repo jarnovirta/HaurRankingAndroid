@@ -12,8 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.domain.MatchScore;
+import haur.haurrankingandroid.domain.ScoreCard;
+import haur.haurrankingandroid.domain.StageScore;
 import haur.haurrankingandroid.service.FileService;
+import haur.haurrankingandroid.service.PractiScoreDataService;
 
 /**
  * Created by Jarno on 13.10.2018.
@@ -51,10 +59,7 @@ public class ImportFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == CHOOSE_FILE_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
 			if (data.getData() != null) {
-				Log.d("MainActivity", "Got data from Activity. Setting file path");
-				FileService.setPractiScoreExportFilePath(data.getData());
-				Log.d("MainActivity", "Setting text field. ");
-				matchNameTextView.setText(FileService.getPractiScoreExportFileMatchname());
+				PractiScoreDataService.importFromFile(data.getData());
 			}
 		}
 		else {

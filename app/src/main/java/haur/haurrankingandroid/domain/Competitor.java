@@ -1,4 +1,9 @@
 package haur.haurrankingandroid.domain;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,21 +13,15 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
+
+@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class Competitor {
 
+	@PrimaryKey(autoGenerate = true)
 	private Long id;
-
-	private Match match;
-
-	private Long matchId;
-
-	@JsonProperty("sh_uid")
-	private String practiScoreId;
-
-	@JsonProperty("sh_num")
-	private int shooterNumber;
 
 	@JsonProperty("sh_fn")
 	private String firstName;
@@ -30,36 +29,38 @@ public class Competitor {
 	@JsonProperty("sh_ln")
 	private String lastName;
 
-	@JsonProperty("sh_id")
-	private String ipscAlias;
+
+//	Following fields not persisted:
+
+	@Ignore
+	private Division division;
+
+	@JsonProperty("sh_uid")
+	@Ignore
+	private String practiScoreId;
 
 	@JsonProperty("sh_dvp")
-	private String division;
-
-	private List<String> categories;
-
-	@JsonProperty("sh_ctgs")
-	private String practiScoreCategoryString;
+	@Ignore
+	private String practiScoreDivisionString;
 
 	@JsonProperty("sh_dq")
+	@Ignore
 	private boolean disqualified;
 
-	@JsonProperty("sh_team")
-	private String team;
-
-	@JsonProperty("sh_del")
-	private boolean deleted = false;
-
 	@JsonProperty("sh_pf")
+	@Ignore
 	private String practiScorePowerFactorString;
 
-	@JsonProperty("sh_cc")
-	private String country;
-
+	@Ignore
 	private PowerFactor powerFactor;
 
-	@JsonProperty("sh_sqd")
-	private int squad;
+	public Competitor() { }
+
+	public Competitor(String firstName, String lastName, String practiScoreId) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.practiScoreId = practiScoreId;
+	}
 
 	public Long getId() {
 		return id;
@@ -75,22 +76,6 @@ public class Competitor {
 
 	public void setPractiScoreId(String practiScoreId) {
 		this.practiScoreId = practiScoreId;
-	}
-
-	public Match getMatch() {
-		return match;
-	}
-
-	public void setMatch(Match match) {
-		this.match = match;
-	}
-
-	public int getShooterNumber() {
-		return shooterNumber;
-	}
-
-	public void setShooterNumber(int shooterNumber) {
-		this.shooterNumber = shooterNumber;
 	}
 
 	public String getFirstName() {
@@ -109,24 +94,12 @@ public class Competitor {
 		this.lastName = lastName.trim();
 	}
 
-	public String getPractiScoreDivisionString() {
-		return division;
-	}
-
 	public boolean isDisqualified() {
 		return disqualified;
 	}
 
 	public void setDisqualified(boolean disqualified) {
 		this.disqualified = disqualified;
-	}
-
-	public String getTeam() {
-		return team;
-	}
-
-	public void setTeam(String team) {
-		this.team = team;
 	}
 
 	public String getPractiScorePowerFactorString() {
@@ -138,22 +111,6 @@ public class Competitor {
 		this.powerFactor = PowerFactor.valueOf(practiScorePowerFactorString.toUpperCase());
 	}
 
-	public int getSquad() {
-		return squad;
-	}
-
-	public void setSquad(int squad) {
-		this.squad = squad;
-	}
-
-	public String getIpscAlias() {
-		return ipscAlias;
-	}
-
-	public void setIpscAlias(String ipscAlias) {
-		this.ipscAlias = ipscAlias;
-	}
-
 	public PowerFactor getPowerFactor() {
 		return powerFactor;
 	}
@@ -162,64 +119,15 @@ public class Competitor {
 		this.powerFactor = powerFactor;
 	}
 
-	public String getDivision() {
+	public Division getDivision() {
 		return division;
 	}
 
-	public void setDivision(String division) {
+	public void setDivision(Division division) {
 		this.division = division;
 	}
 
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
 	public void setPractiScoreDivisionString(String practiScoreDivisionString) {
-		this.division = practiScoreDivisionString;
-	}
-
-	public void setPractiScoreCategoryString(String categoriesString) {
-		this.practiScoreCategoryString = categoriesString;
-		if (this.categories == null) this.categories = new ArrayList<String>();
-		practiScoreCategoryString = practiScoreCategoryString.replace("\"", "");
-		practiScoreCategoryString = practiScoreCategoryString.replace("[", "");
-		practiScoreCategoryString = practiScoreCategoryString.replace("]", "");
-		practiScoreCategoryString = practiScoreCategoryString.replace(" ", "");
-		String[] categoryStrings = practiScoreCategoryString.split(",");
-		for (String category : categoryStrings) {
-			this.categories.add(category);
-		}
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getPractiScoreCategoryString() {
-		return practiScoreCategoryString;
-	}
-
-	public Long getMatchId() {
-		return matchId;
-	}
-
-	public void setMatchId(Long matchId) {
-		this.matchId = matchId;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
+		setDivision(Division.fromString(practiScoreDivisionString));
 	}
 }

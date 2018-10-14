@@ -1,5 +1,9 @@
 package haur.haurrankingandroid.domain;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,15 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stage {
 
+	@PrimaryKey(autoGenerate = true)
 	private Long id;
 
 	@JsonProperty("stage_uuid")
 	private String practiScoreId;
 
+	private Long matchId;
+
 	@JsonIgnore
 	private Match match;
-
-	private Long matchId;
 
 	@JsonProperty("stage_name")
 	private String name;
@@ -37,7 +42,8 @@ public class Stage {
 	@JsonProperty("stage_deleted")
 	private boolean deleted = false;
 
-	private int matchStagesIndex;
+	@JsonProperty("stage_classifiercode")
+	private String classifierCode;
 
 	public Long getId() {
 		return id;
@@ -139,12 +145,11 @@ public class Stage {
 		this.matchId = matchId;
 	}
 
-	public int getMatchStagesIndex() {
-		return matchStagesIndex;
+	public String getClassifierCode() {
+		return classifierCode;
 	}
 
-	public void setMatchStagesIndex(int matchStagesIndex) {
-		this.matchStagesIndex = matchStagesIndex;
+	public void setClassifierCode(String classifierCode) {
+		this.classifierCode = classifierCode;
 	}
-
 }

@@ -10,18 +10,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StageScore {
 
 	@JsonProperty("stage_uuid")
-	private String uuid;
+	private String stageUuid;
 	@JsonProperty("stage_number")
 	private int stageNumber;
 	@JsonProperty("stage_stagescores")
 	private List<ScoreCard> scoreCards;
 
-	public String getUuid() {
-		return uuid;
+	public String getStageUuid() {
+		return stageUuid;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setStageUuid(String stageUuid) {
+		this.stageUuid = stageUuid;
 	}
 
 	public int getStageNumber() {

@@ -1,86 +1,113 @@
 package haur.haurrankingandroid.domain;
 
-import java.util.Calendar;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
+import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
+
+@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScoreCard implements Comparable<ScoreCard> {
 
+	@PrimaryKey(autoGenerate = true)
 	private Long id;
 
-	@JsonProperty("shtr")
-	private String competitorPractiScoreId;
-
-	private Competitor competitor;
+	private Long matchId;
 
 	private Long competitorId;
 
-	private Stage stage;
+	@TypeConverters({ ClassifierConverter.class })
+	private Classifier classifier;
 
-	private Long stageId;
+	@TypeConverters({ DivisionConverter.class })
+	private Division division;
 
-	@JsonProperty("mod")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
-	private Calendar modified;
+
+//	The rest of the fields are not persisted:
+
+	@JsonProperty("shtr")
+	@Ignore
+	private String competitorPractiScoreId;
+
+	@Ignore
+	private Competitor competitor;
 
 	@JsonProperty("popm")
+	@Ignore
 	private int popperMisses;
 
 	@JsonProperty("poph")
+	@Ignore
 	private int popperHits;
 
 	@JsonProperty("popns")
+	@Ignore
 	private int popperNoshootHits;
 
 	@JsonProperty("popnpm")
+	@Ignore
 	private int popperNonPenaltyMisses;
 
 	@JsonProperty("rawpts")
+	@Ignore
 	private int points;
 
 	@JsonProperty("str")
+	@Ignore
 	private double[] stringTimes;
 
+	@Ignore
 	private double time;
 
 	@JsonProperty("ts")
+	@Ignore
 	private int[] paperTargetHits = {};
 
 	@JsonProperty("dnf")
+	@Ignore
 	private boolean dnf;
 
+	@Ignore
 	private int aHits;
 
+	@Ignore
 	private int cHits;
 
+	@Ignore
 	private int dHits;
 
+	@Ignore
 	private int misses;
 
+	@Ignore
 	private int noshootHits;
 
 	@JsonProperty("proc")
+	@Ignore
 	private int proceduralPenalties;
 
 	@JsonProperty("apen")
+	@Ignore
 	private int additionalPenalties;
 
 	private double hitFactor;
 
-	private int stageRank;
+	public ScoreCard() { }
 
-	private double scorePercentage;
-
-	private double combinedDivisionScorePercentage;
-
-	private double stagePoints;
-
-	private double combinedDivisionStagePoints;
-
-	private double inViewStagePoints;
+	public ScoreCard(Competitor competitor, Classifier classifier, double hitfactor, Division division) {
+		this.competitor = competitor;
+		this.competitorPractiScoreId = competitor.getPractiScoreId();
+		this.classifier = classifier;
+		this.hitFactor = hitfactor;
+		this.division = division;
+	}
 
 	@Override
 	public int compareTo(ScoreCard compareToScoreCard) {
@@ -95,15 +122,6 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	public void setCompetitorPractiScoreId(String competitorPractiScoreId) {
 		this.competitorPractiScoreId = competitorPractiScoreId;
-	}
-
-	public Calendar getModified() {
-		return modified;
-	}
-
-	public void setModified(Calendar modified) {
-		this.modified = modified;
-
 	}
 
 	public int getPopperMisses() {
@@ -136,6 +154,7 @@ public class ScoreCard implements Comparable<ScoreCard> {
 	public void setPopperNoshootHits(int popperNoshootHits) {
 		this.popperNoshootHits = popperNoshootHits;
 	}
+
 	public int getPoints() {
 		return points;
 	}
@@ -213,27 +232,65 @@ public class ScoreCard implements Comparable<ScoreCard> {
 		this.id = id;
 	}
 
-	public int getaHits() {
+	public Competitor getCompetitor() {
+		return competitor;
+	}
+
+	public void setCompetitor(Competitor competitor) {
+		this.competitor = competitor;
+	}
+
+	public Long getCompetitorId() {
+		return competitorId;
+	}
+
+	public void setCompetitorId(Long competitorId) {
+		this.competitorId = competitorId;
+	}
+
+	public double[] getStringTimes() {
+		return stringTimes;
+	}
+
+	public void setStringTimes(double[] stringTimes) {
+		if (stringTimes != null && stringTimes.length > 0) {
+			this.time = stringTimes[0];
+		}
+	}
+
+	public void setTime(double time) {
+		this.time = time;
+	}
+
+	public boolean isDnf() {
+		return dnf;
+	}
+
+	public void setDnf(boolean dnf) {
+		this.dnf = dnf;
+	}
+
+	public int getAHits() {
 		return aHits;
 	}
 
-	public void setaHits(int aHits) {
+	public void setAHits(int aHits) {
 		this.aHits = aHits;
 	}
 
-	public int getcHits() {
+	public int getCHits() {
 		return cHits;
 	}
 
-	public void setcHits(int cHits) {
+	public void setCHits(int cHits) {
 		this.cHits = cHits;
 	}
 
-	public int getdHits() {
+	public int getDHits() {
 		return dHits;
 	}
 
-	public void setdHits(int dHits) {
+	public void setDHits(int dHits) {
 		this.dHits = dHits;
 	}
 
@@ -261,20 +318,12 @@ public class ScoreCard implements Comparable<ScoreCard> {
 		this.proceduralPenalties = proceduralPenalties;
 	}
 
-	public Competitor getCompetitor() {
-		return competitor;
+	public int getAdditionalPenalties() {
+		return additionalPenalties;
 	}
 
-	public void setCompetitor(Competitor competitor) {
-		this.competitor = competitor;
-	}
-
-	public Stage getStage() {
-		return stage;
-	}
-
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public void setAdditionalPenalties(int additionalPenalties) {
+		this.additionalPenalties = additionalPenalties;
 	}
 
 	public double getHitFactor() {
@@ -285,95 +334,27 @@ public class ScoreCard implements Comparable<ScoreCard> {
 		this.hitFactor = hitFactor;
 	}
 
-	public int getStageRank() {
-		return stageRank;
+	public Classifier getClassifier() {
+		return classifier;
 	}
 
-	public void setStageRank(int stageRank) {
-		this.stageRank = stageRank;
+	public void setClassifier(Classifier classifier) {
+		this.classifier = classifier;
 	}
 
-	public void setStringTimes(double[] stringTimes) {
-		if (stringTimes != null && stringTimes.length > 0) {
-			this.time = stringTimes[0];
-		}
+	public Long getMatchId() {
+		return matchId;
 	}
 
-	public void setTime(double time) {
-		this.time = time;
+	public void setMatchId(Long matchId) {
+		this.matchId = matchId;
 	}
 
-	public int getAdditionalPenalties() {
-		return additionalPenalties;
+	public Division getDivision() {
+		return division;
 	}
 
-	public void setAdditionalPenalties(int additionalPenalties) {
-		this.additionalPenalties = additionalPenalties;
+	public void setDivision(Division division) {
+		this.division = division;
 	}
-
-	public Long getStageId() {
-		return stageId;
-	}
-
-	public void setStageId(Long stageId) {
-		this.stageId = stageId;
-	}
-
-	public Long getCompetitorId() {
-		return competitorId;
-	}
-
-	public void setCompetitorId(Long competitorId) {
-		this.competitorId = competitorId;
-	}
-
-	public double getStagePoints() {
-		return stagePoints;
-	}
-
-	public void setStagePoints(double stagePoints) {
-		this.stagePoints = stagePoints;
-	}
-
-	public double getCombinedDivisionStagePoints() {
-		return combinedDivisionStagePoints;
-	}
-
-	public void setCombinedDivisionStagePoints(double combinedDivisionStagePoints) {
-		this.combinedDivisionStagePoints = combinedDivisionStagePoints;
-	}
-
-	public double getInViewStagePoints() {
-		return inViewStagePoints;
-	}
-
-	public void setInViewStagePoints(double inViewStagePoints) {
-		this.inViewStagePoints = inViewStagePoints;
-	}
-
-	public double getScorePercentage() {
-		return scorePercentage;
-	}
-
-	public void setScorePercentage(double scorePercentage) {
-		this.scorePercentage = scorePercentage;
-	}
-
-	public double getCombinedDivisionScorePercentage() {
-		return combinedDivisionScorePercentage;
-	}
-
-	public void setCombinedDivisionScorePercentage(double combinedDivisionScorePercentage) {
-		this.combinedDivisionScorePercentage = combinedDivisionScorePercentage;
-	}
-
-	public boolean isDnf() {
-		return dnf;
-	}
-
-	public void setDnf(boolean dnf) {
-		this.dnf = dnf;
-	}
-
-
 }
