@@ -13,8 +13,11 @@ import java.util.Map;
 import java.util.Set;
 
 import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.domain.Classifier;
+import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.DivisionRanking;
+import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.domain.ScoreCard;
@@ -33,35 +36,111 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	@Override
 	protected Ranking doInBackground(Void... args) {
 		Ranking ranking = new Ranking();
+		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
+
 		AppDatabase db = AppDatabase.getDatabase();
 
 		for (Division division : Division.values()) {
 			Log.d("TEST", "\n\n\t**** DIVISION: " + division.toString() + " **** ");
-			DivisionRanking divisionRanking = new DivisionRanking();
+
 			List<ScoreCard> scoreCards = db.scoreCardDao().findForValidClassifiers(division);
 			setMatchesToCards(scoreCards);
-			Map<Long, List<ScoreCard>> scoreCardMap = mapCardsByCompetitor(scoreCards);
+
+			Map<Competitor, List<ScoreCard>> scoreCardMap = mapCardsByCompetitor(scoreCards);
 			sortAndFilterScoreCardsMap(scoreCardMap);
-			for (Long id : scoreCardMap.keySet()) {
-				Log.d("TEST", "\n\n**** COMPETITOR ID: " + id + ": CARDS COUNT : " + scoreCardMap.get(id).size());
-			}
+
+			ranking.getDivisionRankings().add(generateDivisionRanking(division, scoreCardMap));
+
 		}
 		return null;
 	}
 
-	private void sortAndFilterScoreCardsMap(Map<Long, List<ScoreCard>> scoreCardsMap) {
-		Set<Long> removeIds = new HashSet<>();
-		for (Long id : scoreCardsMap.keySet()) {
-			List<ScoreCard> cards = scoreCardsMap.get(id);
-			if (cards.size() < 4) {
-				removeIds.add(id);
-				continue;
+	private DivisionRanking generateDivisionRanking(Division division,
+	                                                Map<Competitor, List<ScoreCard>> scoreCardMap) {
+
+		DivisionRanking divisionRanking = new DivisionRanking();
+
+		// Scorecards by classifier
+		Map<Classifier, List<ScoreCard>> classifierScoreCardsMap = new HashMap<>();
+
+		// Average of top two hitfactors for a classifier
+		Map<Classifier, Double> classifierTopHitFactorsAveragesMap;
+
+		// Competitor relative result for classifier mapped by ScoreCard
+		Map<Competitor, List<Double>> competitorRelativeResultsMap = new HashMap<>();
+
+		for (List<ScoreCard> cards : scoreCardMap.values()) {
+			for (ScoreCard card : cards) {
+				if (!classifierScoreCardsMap.keySet().contains(card.getClassifier())) {
+					classifierScoreCardsMap.put(card.getClassifier(), new ArrayList<ScoreCard>());
+				}
+				classifierScoreCardsMap.get(card.getClassifier()).add(card);
 			}
+		}
+
+		classifierTopHitFactorsAveragesMap = getClassifierTopHitFactorsAverageMap(classifierScoreCardsMap);
+
+		// Map relative results for competitors
+		for (Classifier classifier : classifierScoreCardsMap.keySet()) {
+			for (ScoreCard card : classifierScoreCardsMap.get(classifier)) {
+				double topTwoAverage = classifierTopHitFactorsAveragesMap.get(classifier);
+				double relativeResult;
+				if (topTwoAverage > 0) {
+					relativeResult = card.getHitFactor() / topTwoAverage;
+				}
+				else relativeResult = 0;
+				if (!competitorRelativeResultsMap.keySet().contains(card.getCompetitor())) {
+					competitorRelativeResultsMap.put(card.getCompetitor(), new ArrayList<Double>);
+				}
+				competitorRelativeResultsMap.get(card.getCompetitor()).add(relativeResult);
+			}
+		}
+		// Generate division ranking rows for competitors
+		List<DivisionRankingRow> rows = new ArrayList<>();
+		for (Competitor comp : competitorRelativeResultsMap.keySet()) {
+			List<Double> relativeResults = competitorRelativeResultsMap.get(comp);
+
+			Collections.sort(relativeResults);
+			int resultsCount = relativeResults.size();
+			if (relativeResults.size() > 4) relativeResults = relativeResults.subList(0, 4);
+
+			double sum = 0.0;
+			double average = 0;
+			for (double result : relativeResults) sum += result;
+
+			if (relativeResults.size() > 0) {
+				average = sum / relativeResults.size();
+			}
+			rows.add(new DivisionRankingRow(comp, average, resultsCount));
+		}
+		return divisionRanking;
+
+	}
+
+	private Map<Classifier, Double> getClassifierTopHitFactorsAverageMap(Map<Classifier,
+			List<ScoreCard>> classifierScoreCardsMap) {
+
+		Map<Classifier, Double> result = new HashMap<>();
+
+		for (Classifier classifier : classifierScoreCardsMap.keySet()) {
+			List<ScoreCard> cards = classifierScoreCardsMap.get(classifier);
+			Collections.sort(cards);
+			Double topTwoAverage = null;
+			topTwoAverage = cards.get(0).getHitFactor() + cards.get(1).getHitFactor() / 100;
+
+			result.put(classifier, topTwoAverage);
+		}
+		return result;
+	}
+
+	private void sortAndFilterScoreCardsMap(Map<Competitor, List<ScoreCard>> scoreCardsMap) {
+		for (Competitor comp : scoreCardsMap.keySet()) {
+			List<ScoreCard> cards = scoreCardsMap.get(comp);
+
 			Collections.sort(cards, new ScoreCardsByDateComparator());
 			Collections.reverse(cards);
-			if (cards.size() > 4) scoreCardsMap.put(id, cards.subList(0, 4));
+			if (cards.size() > 8) scoreCardsMap.put(comp, cards.subList(0, 8));
 		}
-		scoreCardsMap.keySet().removeAll(removeIds);
 	}
 
 	public class ScoreCardsByDateComparator implements Comparator<ScoreCard> {
@@ -88,43 +167,36 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	}
 
 
-	private Map<Long, List<ScoreCard>> mapCardsByCompetitor(List<ScoreCard> cards) {
-		Map<Long, List<ScoreCard>> result = new HashMap<>();
-		for (ScoreCard card : cards) {
-			if (!result.keySet().contains(card.getCompetitorId())) {
-				List<ScoreCard> competitorCards = new ArrayList<>();
-				competitorCards.add(card);
-				result.put(card.getCompetitorId(), competitorCards);
-			}
-			else {
-				result.get(card.getCompetitorId()).add(card);
-			}
+	private Map<Competitor, List<ScoreCard>> mapCardsByCompetitor(List<ScoreCard> cards) {
+		AppDatabase db = AppDatabase.getDatabase();
+		Set<Long> ids = new HashSet<>();
+		for (ScoreCard card : cards)  if (!ids.contains(card.getCompetitorId())) {
+			ids.add(card.getCompetitorId());
 		}
-		for (List<ScoreCard> competitorCards : result.values()) {
+		List<Competitor> competitors = db.competitorDao().find(ids);
+
+		Map<Competitor, List<ScoreCard>> result = new HashMap<>();
+
+		for (ScoreCard card : cards) {
+			Competitor competitor = getCompetitor(competitors, card.getCompetitorId());
+
+			if (!result.keySet().contains(card.getCompetitor())) {
+				result.put(competitor, new ArrayList<ScoreCard>());
+
+			}
+			result.get(card.getCompetitor()).add(card);
 
 		}
 		return result;
 	}
 
+	private Competitor getCompetitor(List<Competitor> competitors, Long id) {
+		for (Competitor comp : competitors) if (comp.getId().equals(id)) return comp;
+		return null;
+	}
 	@Override
 	protected void onPostExecute(Ranking ranking) {
 
 		if (handler != null) handler.process(ranking);
 	}
 }
-
-// Loop divisions
-
-// Get classifiers with min 2 results and average of top two hitfactors
-
-// Get competitors with min 4 results in division for valid classifiers. Get max 8
-// latest result cards, order by match date.
-
-// Loop competitors
-// and calculate relative classifier results. Get average of best 4.
-// Get DivisionRankingRow for competitor with average result.
-
-// Order rows by score average.
-
-// Set percentages etc.
-//

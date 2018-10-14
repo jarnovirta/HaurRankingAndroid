@@ -14,8 +14,6 @@ public class DivisionRanking {
 
 	private List<DivisionRankingRow> rows = new ArrayList<DivisionRankingRow>();
 
-	private Set<Classifier> validClassifiers = new HashSet<Classifier>();
-
 	public Division getDivision() {
 		return division;
 	}
@@ -32,11 +30,5 @@ public class DivisionRanking {
 		this.rows = rows;
 	}
 
-	public Set<Classifier> getValidClassifiers() {
-		return validClassifiers;
-	}
 
-	public void setValidClassifiers(Set<Classifier> validClassifiers) {
-		this.validClassifiers = validClassifiers;
-	}
 }
