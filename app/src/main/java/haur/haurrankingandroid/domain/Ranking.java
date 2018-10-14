@@ -33,17 +33,17 @@ public class Ranking {
 		competitorsWithRank = 0;
 		Set<Classifier> classifiers = new HashSet<Classifier>();
 		Set<Competitor> competitors = new HashSet<Competitor>();
-		for (DivisionRanking divisionRanking : divisionRankings) {
-			for (Classifier classifier : divisionRanking.getValidClassifiers()) {
-				if (!classifiers.contains(classifier))
-					classifiers.add(classifier);
-			}
-			for (DivisionRankingRow line : divisionRanking.getRows()) {
-				totalResultsCount += line.getResultsCount();
-				if (line.isRankedCompetitor() && !competitors.contains(line.getCompetitor()))
-					competitors.add(line.getCompetitor());
-			}
-		}
+//		for (DivisionRanking divisionRanking : divisionRankings) {
+//			for (Classifier classifier : divisionRanking.getValidClassifiers()) {
+//				if (!classifiers.contains(classifier))
+//					classifiers.add(classifier);
+//			}
+//			for (DivisionRankingRow line : divisionRanking.getRows()) {
+//				totalResultsCount += line.getResultsCount();
+//				if (line.isRankedCompetitor() && !competitors.contains(line.getCompetitor()))
+//					competitors.add(line.getCompetitor());
+//			}
+//		}
 		validClassifiersCount = classifiers.size();
 		competitorsWithRank = competitors.size();
 	}

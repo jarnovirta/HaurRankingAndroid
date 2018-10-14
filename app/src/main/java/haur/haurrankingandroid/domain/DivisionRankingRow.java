@@ -16,7 +16,7 @@ public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 
 	private boolean improvedResult = false;
 
-	public DivisionRankingRow(Competitor competitor, double bestResultsAverage, int resultsCount) {
+	public DivisionRankingRow(Competitor competitor, double bestResultsAverage) {
 		this.competitor = competitor;
 		this.bestResultsAverage = bestResultsAverage;
 		this.rankedCompetitor = rankedCompetitor;

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import haur.haurrankingandroid.data.dao.TypeConverters.DateConverter;
 
-@Entity
+@Entity(tableName = "IpscMatch")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Match {
 

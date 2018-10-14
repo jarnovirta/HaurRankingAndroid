@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.os.Environment;
 
+import java.util.List;
+
 import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.data.dao.CompetitorDao;
 import haur.haurrankingandroid.data.dao.MatchDao;

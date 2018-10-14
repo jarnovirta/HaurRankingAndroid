@@ -17,6 +17,6 @@ public interface MatchDao {
 	@Insert
 	Long insert(Match match);
 
-	@Query("SELECT * FROM Match WHERE id IN (:ids)")
+	@Query("SELECT * FROM ipscmatch WHERE id IN (:ids)")
 	List<Match> find(List<Long> ids);
 }
