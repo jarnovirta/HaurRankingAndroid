@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.service;
+package haur.haurrankingandroid.service.file;
 
 import android.net.Uri;
 import android.os.Environment;
@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchScore;
-import haur.haurrankingandroid.domain.ScoreCard;
-import haur.haurrankingandroid.domain.StageScore;
 
 /**
  * Created by Jarno on 11.10.2018.

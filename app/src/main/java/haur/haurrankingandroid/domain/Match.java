@@ -40,6 +40,9 @@ public class Match {
 	@Ignore
 	private List<Competitor> competitors;
 
+	@Ignore
+	private List<ScoreCard> scoreCards;
+
 	public Match() { }
 
 	public Match(Long id, String practiScoreId, String name,
@@ -98,4 +101,11 @@ public class Match {
 		this.practiScoreId = practiScoreId;
 	}
 
+	public List<ScoreCard> getScoreCards() {
+		return scoreCards;
+	}
+
+	public void setScoreCards(List<ScoreCard> scoreCards) {
+		this.scoreCards = scoreCards;
+	}
 }

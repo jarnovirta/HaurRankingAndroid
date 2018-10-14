@@ -32,6 +32,9 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 //	The rest of the fields are not persisted:
 
+	@Ignore
+	private Match match;
+
 	@JsonProperty("shtr")
 	@Ignore
 	private String competitorPractiScoreId;
@@ -356,5 +359,13 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	public void setDivision(Division division) {
 		this.division = division;
+	}
+
+	public Match getMatch() {
+		return match;
+	}
+
+	public void setMatch(Match match) {
+		this.match = match;
 	}
 }

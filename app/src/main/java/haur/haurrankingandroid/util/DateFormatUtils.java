@@ -9,7 +9,7 @@ import java.util.Date;
  */
 
 public class DateFormatUtils {
-	public static String calendarToDateString(Date date) {
+	public static String dateToString(Date date) {
 		if (date == null)
 			return "";
 		String dateString = null;
@@ -22,7 +22,7 @@ public class DateFormatUtils {
 		return dateString;
 	}
 
-	public static Date stringToCalendar(String dateString) {
+	public static Date stringToDate(String dateString) {
 		Date date = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");

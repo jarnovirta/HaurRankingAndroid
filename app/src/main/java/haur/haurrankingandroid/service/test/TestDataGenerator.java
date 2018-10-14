@@ -1,6 +1,5 @@
-package haur.haurrankingandroid.service;
+package haur.haurrankingandroid.service.test;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.ScoreCard;
-import haur.haurrankingandroid.domain.Stage;
 import haur.haurrankingandroid.util.DateFormatUtils;
 
 /**
@@ -51,22 +49,18 @@ public class TestDataGenerator {
 	static Double[] charlesSpringMatchHitFactors = new Double[] { 2.2, 5.8, 6.0, 5.7, null, null, null, null, null,
 			null };
 
-	public static List<AsyncTask> generateTestData() {
+	public static List<Match> generateTestData() {
 		Log.d("TEST GENERATOR", "GENERATING TEST DATA...");
 		List<Match> matches = getTestMatches();
-		List<AsyncTask> databaseTasks = new ArrayList<AsyncTask>();
 		try {
 			for (Match match : matches) {
-				List<ScoreCard> cards = createScoreCards(match);
-				AsyncTask<Void, Void, Integer> task = new PractiScoreDataService.SaveDataTask(match, cards);
-				task.execute();
-				databaseTasks.add(task);
+				match.setScoreCards(createScoreCards(match));
 			}
 		}
 		catch (Exception e) {
 			Log.e("TEST GENERATOR", e.getMessage(), e);
 		}
-		return databaseTasks;
+		return matches;
 	}
 
 
@@ -82,7 +76,7 @@ public class TestDataGenerator {
 		Match newTestMatch = new Match();
 		newTestMatch.setName("New match");
 		newTestMatch.setPractiScoreId("newMatchPSId");
-		newTestMatch.setDate(DateFormatUtils.stringToCalendar("18.11.2017"));
+		newTestMatch.setDate(DateFormatUtils.stringToDate("18.11.2017"));
 		setCompetitorsToMatch(newTestMatch);
 		return newTestMatch;
 	}
@@ -91,7 +85,7 @@ public class TestDataGenerator {
 		Match oldTestMatch = new Match();
 		oldTestMatch.setName("Old match");
 		oldTestMatch.setPractiScoreId("oldMatchPSId");
-		oldTestMatch.setDate(DateFormatUtils.stringToCalendar("12.11.2017"));
+		oldTestMatch.setDate(DateFormatUtils.stringToDate("12.11.2017"));
 		setCompetitorsToMatch(oldTestMatch);
 		return oldTestMatch;
 	}
@@ -99,7 +93,7 @@ public class TestDataGenerator {
 		Match springTestMatch = new Match();
 		springTestMatch.setName("Spring match");
 		springTestMatch.setPractiScoreId("springMatchPSId");
-		springTestMatch.setDate(DateFormatUtils.stringToCalendar("01.04.2017"));
+		springTestMatch.setDate(DateFormatUtils.stringToDate("01.04.2017"));
 		setCompetitorsToMatch(springTestMatch);
 		return springTestMatch;
 	}

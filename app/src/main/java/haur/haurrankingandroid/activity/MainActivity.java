@@ -13,20 +13,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.activity.fragment.ClassifiersFragment;
 import haur.haurrankingandroid.activity.fragment.CompetitorsFragment;
 import haur.haurrankingandroid.activity.fragment.ImportFragment;
 import haur.haurrankingandroid.activity.fragment.RankingFragment;
-import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.pdf.PdfGenerator;
-import haur.haurrankingandroid.service.FileService;
-import haur.haurrankingandroid.service.RankingService;
+import haur.haurrankingandroid.service.file.FileService;
+import haur.haurrankingandroid.service.ranking.RankingService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		RankingService.getRanking();
+		RankingService.saveTestData();
 		FileService.createDirectoriesIfNotExist();
 
 		setContentView(R.layout.activity_main);

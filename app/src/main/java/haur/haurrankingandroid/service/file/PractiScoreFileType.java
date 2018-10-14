@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.service;
+package haur.haurrankingandroid.service.file;
 
 /**
  * Created by Jarno on 11.10.2018.

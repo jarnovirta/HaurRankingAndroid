@@ -4,7 +4,7 @@ package haur.haurrankingandroid.domain;
  * Created by Jarno on 14.10.2018.
  */
 
-public class RankingRow implements Comparable<RankingRow> {
+public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 	private Competitor competitor;
 	private double resultPercentage;
 	private double bestResultsAverage;
@@ -17,7 +17,7 @@ public class RankingRow implements Comparable<RankingRow> {
 	private boolean improvedResult = false;
 
 	@Override
-	public int compareTo(RankingRow other) {
+	public int compareTo(DivisionRankingRow other) {
 		double compareToAverage = other.getBestResultsAverage();
 		/* For Ascending order */
 		if (this.bestResultsAverage < compareToAverage)

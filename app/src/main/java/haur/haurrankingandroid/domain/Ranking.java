@@ -1,6 +1,7 @@
 package haur.haurrankingandroid.domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,34 +11,42 @@ import java.util.Set;
  */
 
 public class Ranking {
-	private Division division;
+
+	private List<DivisionRanking> divisionRankings = new ArrayList<DivisionRanking>();
 
 
-	private List<RankingRow> rankingRows = new ArrayList<RankingRow>();
+	private Calendar date;
 
-	private Set<Classifier> validClassifiers = new HashSet<Classifier>();
+	private int totalResultsCount;
+	private int competitorsWithRank;
+	private int validClassifiersCount;
 
-	public Division getDivision() {
-		return division;
+	private Calendar latestIncludedMatchDate;
+	private String latestIncludedMatchName;
+
+	public Ranking() {
+		date = Calendar.getInstance();
 	}
 
-	public void setDivision(Division division) {
-		this.division = division;
+	public void setTotalCompetitorsAndResultsCounts() {
+		totalResultsCount = 0;
+		validClassifiersCount = 0;
+		competitorsWithRank = 0;
+		Set<Classifier> classifiers = new HashSet<Classifier>();
+		Set<Competitor> competitors = new HashSet<Competitor>();
+		for (DivisionRanking divisionRanking : divisionRankings) {
+			for (Classifier classifier : divisionRanking.getValidClassifiers()) {
+				if (!classifiers.contains(classifier))
+					classifiers.add(classifier);
+			}
+			for (DivisionRankingRow line : divisionRanking.getRows()) {
+				totalResultsCount += line.getResultsCount();
+				if (line.isRankedCompetitor() && !competitors.contains(line.getCompetitor()))
+					competitors.add(line.getCompetitor());
+			}
+		}
+		validClassifiersCount = classifiers.size();
+		competitorsWithRank = competitors.size();
 	}
 
-	public List<RankingRow> getRankingRows() {
-		return rankingRows;
-	}
-
-	public void setRankingRows(List<RankingRow> rankingRows) {
-		this.rankingRows = rankingRows;
-	}
-
-	public Set<Classifier> getValidClassifiers() {
-		return validClassifiers;
-	}
-
-	public void setValidClassifiers(Set<Classifier> validClassifiers) {
-		this.validClassifiers = validClassifiers;
-	}
 }
