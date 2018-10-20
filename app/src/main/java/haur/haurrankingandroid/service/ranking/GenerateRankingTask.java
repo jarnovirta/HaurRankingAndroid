@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.DivisionRanking;
@@ -36,7 +37,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 		for (Division division : Division.values()) {
 			DivisionRanking divRank = generateDivisionRanking(division);
-			ranking.getDivisionRankings().add(divRank);
+			if (divRank != null) ranking.getDivisionRankings().add(divRank);
 		}
 		return ranking;
 	}
@@ -46,12 +47,12 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		AppDatabase db = AppDatabase.getDatabase();
 
 		// Get classifiers with min. 2 results
-		List<String> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
+		List<Classifier> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
 
 		// Average of top two hitfactors for a classifier
-		Map<String, Double> classifierTopHitFactorsAveragesMap = new HashMap<>();
+		Map<Classifier, Double> classifierTopHitFactorsAveragesMap = new HashMap<>();
 
-		for (String classifier : validClassifiers) {
+		for (Classifier classifier : validClassifiers) {
 			classifierTopHitFactorsAveragesMap.put(classifier,
 					db.scoreCardDao().getTopTwoHitFactorsAverage(division, classifier));
 		}
@@ -89,16 +90,17 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			}
 			competitorRelativeResultsAverages.put(comp, relativeResultAverage);
 		}
-		DivisionRanking divisionRanking = new DivisionRanking();
-		divisionRanking.setRows(generateRows(competitorRelativeResultsAverages, division, validClassifiers));
+		List<DivisionRankingRow> rows = generateRows(competitorRelativeResultsAverages, division,
+				validClassifiers);
+		if (rows.size() > 0) return new DivisionRanking(division,
+				generateRows(competitorRelativeResultsAverages, division, validClassifiers));
 
-		return divisionRanking;
-
+		else return null;
 	}
 
 
 	private List<DivisionRankingRow> generateRows(Map<Competitor, Double> competitorResultAveragesMap,
-	                                              Division division, List<String> validClassifiers) {
+	                                              Division division, List<Classifier> validClassifiers) {
 		AppDatabase db = AppDatabase.getDatabase();
 		List<DivisionRankingRow> rows = new ArrayList<>();
 		for (Competitor comp : competitorResultAveragesMap.keySet()) {
@@ -123,7 +125,6 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 	@Override
 	protected void onPostExecute(Ranking ranking) {
-		Log.d("TASK", "ON POST EXECUTE");
 		if (handler != null) handler.process(ranking);
 	}
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.Match;
@@ -16,8 +17,8 @@ import haur.haurrankingandroid.util.DataFormatUtils;
  */
 
 public class TestDataGenerator {
-	static String[] classifiers = new String[] { "CLC-01", "CLC-03", "CLC-05", "CLC-07", "CLC-09",
-			"CLC-11", "CLC-13", "CLC-15", "CLC-17", "CLC-19"};
+	static Classifier[] classifiers = new Classifier[] {Classifier.CLC01, Classifier.CLC03, Classifier.CLC05, Classifier.CLC07,
+			Classifier.CLC09, Classifier.CLC11, Classifier.CLC13, Classifier.CLC15, Classifier.CLC17, Classifier.CLC19};
 
 	static Competitor jarno = new Competitor("Jarno", "Virta", "jarnoPractiId");
 	static Competitor jerry = new Competitor("Jerry", "Miculek", "jerryPractiId");
@@ -109,7 +110,7 @@ public class TestDataGenerator {
 	public static List<ScoreCard> createScoreCards(Match match) {
 		List<ScoreCard> sheets = new ArrayList<ScoreCard>();
 		int index = 0;
-		for (String classifier : classifiers) {
+		for (Classifier classifier : classifiers) {
 
 			if (match.getName().equals("New match")) {
 				if (jarnoNewMatchHitFactors[index] != null)

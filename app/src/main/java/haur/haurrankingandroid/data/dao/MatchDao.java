@@ -7,6 +7,8 @@ import android.arch.persistence.room.TypeConverters;
 
 import java.util.List;
 
+import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Match;
 
 /**
@@ -27,8 +29,9 @@ public interface MatchDao {
 	@Query("SELECT COUNT(id) FROM ipscmatch")
 	int getCount();
 
+	@TypeConverters( {ClassifierConverter.class })
 	@Query("SELECT DISTINCT(sc.classifier) FROM scorecard sc " +
 			"INNER JOIN ipscmatch m ON sc.matchId = m.id " +
 			"WHERE m.id = :id")
-	List<String> getClassifiersForMatch(Long id);
+	List<Classifier> getClassifiersForMatch(Long id);
 }

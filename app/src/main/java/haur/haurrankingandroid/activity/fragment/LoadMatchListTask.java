@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchListItem;
 
@@ -28,8 +29,7 @@ public class LoadMatchListTask extends AsyncTask<Void, Void, List<MatchListItem>
 
 		List<MatchListItem> items = new ArrayList<>();
 		for (Match match : matches) {
-			List<String> classifiers = db.matchDao().getClassifiersForMatch(match.getId());
-			Collections.sort(classifiers);
+			List<Classifier> classifiers = db.matchDao().getClassifiersForMatch(match.getId());
 			items.add(new MatchListItem(match, classifiers));
 		}
 		return items;

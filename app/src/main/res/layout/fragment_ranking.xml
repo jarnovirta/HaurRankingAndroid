@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#eee9e9">
+
+        <Spinner
+            android:id="@+id/division_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-</android.support.constraint.ConstraintLayout>
+        android:layout_height="fill_parent"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent" />
+</LinearLayout>

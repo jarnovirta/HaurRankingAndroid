@@ -13,6 +13,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.MatchListItem;
 import haur.haurrankingandroid.util.DataFormatUtils;
 
@@ -63,7 +64,7 @@ public class MatchListAdapter extends ArrayAdapter<MatchListItem>  {
 
 		String classifiersList = "";
 
-		for (String classifier : item.getClassifiers()) {
+		for (Classifier classifier : item.getClassifiers()) {
 			if (item.getClassifiers().indexOf(classifier) > 0) classifiersList += ", ";
 			classifiersList += classifier.toString();
 		}

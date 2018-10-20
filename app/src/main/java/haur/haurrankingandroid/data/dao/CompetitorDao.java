@@ -8,7 +8,9 @@ import android.arch.persistence.room.TypeConverters;
 import java.util.List;
 import java.util.Set;
 
+import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
 import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 
@@ -27,7 +29,7 @@ public interface CompetitorDao {
 	@Query("SELECT * FROM competitor WHERE firstName LIKE :firstName AND lastName LIKE :lastName")
 	Competitor findByName(String firstName, String lastName);
 
-	@TypeConverters({ DivisionConverter.class })
+	@TypeConverters({ DivisionConverter.class, ClassifierConverter.class})
 	@Query("SELECT * FROM competitor WHERE id IN " +
 			"(SELECT competitor_id FROM " +
 			"(SELECT c.id as competitor_id, count(sc.id) as scorecard_count " +
@@ -36,7 +38,7 @@ public interface CompetitorDao {
 			"WHERE sc.division = :division AND sc.classifier IN (:classifiers) " +
 			"GROUP BY c.id) " +
 			"WHERE scorecard_count > 0)")
-	List<Competitor> getCompetitorsWithResults(Division division, List<String> classifiers);
+	List<Competitor> getCompetitorsWithResults(Division division, List<Classifier> classifiers);
 
 	@Query("SELECT COUNT(id) FROM competitor")
 	int getCount();

@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchScore;
@@ -43,8 +44,8 @@ public class PractiScoreDataService {
 
 	private static void prepareScoreCards(List<ScoreCard> cards, Match match, Stage stage) {
 		if (stage.getClassifierCode() != null) {
-			String classifier = "CLC-" + stage.getClassifierCode().substring(2, stage.getClassifierCode().length());
-			Log.d("TEST", classifier);
+			Classifier classifier = Classifier.fromPractiScoreCode(stage.getClassifierCode());
+
 			for (ScoreCard card : cards) {
 				card.setClassifier(classifier);
 				card.setCompetitor(getCompetitor(match, card.getCompetitorPractiScoreId()));

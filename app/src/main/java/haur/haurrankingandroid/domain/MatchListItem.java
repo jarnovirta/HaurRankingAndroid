@@ -8,9 +8,9 @@ import java.util.List;
 
 public class MatchListItem {
 	Match match;
-	List<String> classifiers;
+	List<Classifier> classifiers;
 
-	public MatchListItem(Match match, List<String> classifiers) {
+	public MatchListItem(Match match, List<Classifier> classifiers) {
 		this.match = match;
 		this.classifiers = classifiers;
 	}
@@ -22,11 +22,11 @@ public class MatchListItem {
 		this.match = match;
 	}
 
-	public List<String> getClassifiers() {
+	public List<Classifier> getClassifiers() {
 		return classifiers;
 	}
 
-	public void setClassifiers(List<String> classifiers) {
+	public void setClassifiers(List<Classifier> classifiers) {
 		this.classifiers = classifiers;
 	}
 }

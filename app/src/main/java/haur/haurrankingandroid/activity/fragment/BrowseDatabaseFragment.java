@@ -33,7 +33,7 @@ public class BrowseDatabaseFragment extends Fragment {
 		tabHost = new FragmentTabHost(getActivity());
 		tabHost.setup(getActivity(), getChildFragmentManager(), R.layout.fragment_browse_db);
 
-		tabHost.addTab(tabHost.newTabSpec("db_competitions_tab").setIndicator("Luokitteluammunnat"),
+		tabHost.addTab(tabHost.newTabSpec("db_competitions_tab").setIndicator("Kilpailut"),
 				MatchesTabFragment.class, null);
 		tabHost.addTab(tabHost.newTabSpec("db_competitors_tab").setIndicator("Kilpailijat"),
 				CompetitorsTabFragment.class, null);
@@ -46,7 +46,7 @@ public class BrowseDatabaseFragment extends Fragment {
 	public void updateTabTitles(int competitionsCount, int competitorsCount) {
 
 		View tabView = tabHost.getTabWidget().getChildAt(0);
-		String competitionsTabTitle = "Luokitteluammunnat (" + competitionsCount + ")";
+		String competitionsTabTitle = "Kilpailut (" + competitionsCount + ")";
 		((TextView) tabView.findViewById(android.R.id.title)).setText(competitionsTabTitle);
 		String competitorsTabTitle = "Kilpailijat (" + competitorsCount + ")";
 		tabView = tabHost.getTabWidget().getChildAt(1);

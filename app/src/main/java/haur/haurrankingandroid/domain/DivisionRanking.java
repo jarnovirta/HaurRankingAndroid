@@ -14,6 +14,11 @@ public class DivisionRanking {
 
 	private List<DivisionRankingRow> rows = new ArrayList<DivisionRankingRow>();
 
+	public DivisionRanking(Division division, List<DivisionRankingRow> rows) {
+		this.division = division;
+		this.rows = rows;
+	}
+
 	public Division getDivision() {
 		return division;
 	}

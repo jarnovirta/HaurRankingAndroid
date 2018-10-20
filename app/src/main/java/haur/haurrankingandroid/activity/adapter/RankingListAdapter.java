@@ -24,11 +24,14 @@ import haur.haurrankingandroid.util.DataFormatUtils;
 public class RankingListAdapter extends ArrayAdapter<DivisionRankingRow>  {
 	private final Context context;
 	private final List<DivisionRankingRow> rankingRows;
+	private ViewHolder viewHolder;
+	private LayoutInflater inflater;
 
 	public RankingListAdapter(Context context, List<DivisionRankingRow> rankingRows) {
-		super(context, -1, rankingRows);
+		super(context, R.layout.fragment_ranking, rankingRows);
 		this.context = context;
 		this.rankingRows = rankingRows;
+		inflater = LayoutInflater.from(context);
 	}
 
 	private static class ViewHolder {
@@ -41,23 +44,23 @@ public class RankingListAdapter extends ArrayAdapter<DivisionRankingRow>  {
 
 	@NonNull
 	@Override
-	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-		ViewHolder viewHolder;
-
-		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) context
+	public View getView(int position, View recycledView, @NonNull ViewGroup parent) {
+		if (recycledView == null || recycledView.getTag() == null) {
+			inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			viewHolder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.ranking_list_item, parent, false);
 
-			viewHolder.rankAndNameView = (TextView) convertView.findViewById(R.id.rankAndNameView);
-			viewHolder.resultCountView = (TextView) convertView.findViewById(R.id.resultCountView);
-			viewHolder.hfAvgView = (TextView) convertView.findViewById(R.id.hitfactorAvgView);
-			viewHolder.percentView = (TextView) convertView.findViewById(R.id.percentView);;
+			recycledView = inflater.inflate(R.layout.ranking_list_item, parent, false);
 
+			viewHolder.rankAndNameView = (TextView) recycledView.findViewById(R.id.rankAndNameView);
+			viewHolder.resultCountView = (TextView) recycledView.findViewById(R.id.resultCountView);
+			viewHolder.hfAvgView = (TextView) recycledView.findViewById(R.id.hitfactorAvgView);
+			viewHolder.percentView = (TextView) recycledView.findViewById(R.id.percentView);;
+
+			recycledView.setTag(viewHolder);
 		}
 		else {
-			viewHolder = (ViewHolder) convertView.getTag();
+			viewHolder = (ViewHolder) recycledView.getTag();
 		}
 
 		DivisionRankingRow row = rankingRows.get(position);
@@ -74,7 +77,7 @@ public class RankingListAdapter extends ArrayAdapter<DivisionRankingRow>  {
 		String hfString = "HF-keskiarvo: " + doubleToString(hfAverage);
 		viewHolder.hfAvgView.setText(hfString);
 
-		return convertView;
+		return recycledView;
 	}
 
 	private String doubleToString(double number) {
