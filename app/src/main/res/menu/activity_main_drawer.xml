@@ -3,33 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_ranking_list"
-            android:icon="@drawable/ic_ranking"
-            android:title="@string/nav_option_ranking_list" />
+    <item android:title="@string/nav_group_ranking">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_ranking_list"
+                    android:icon="@drawable/ic_ranking"
+                    android:title="@string/nav_option_ranking_list" />
 
-        <item
-            android:id="@+id/nav_save_ranking"
-            android:icon="@drawable/ic_pdf"
-            android:title="@string/nav_save_ranking" />
-
-    </group>
+                <item
+                    android:id="@+id/nav_save_ranking"
+                    android:icon="@drawable/ic_pdf"
+                    android:title="@string/nav_save_ranking" />
+                <item
+                    android:id="@+id/nav_email"
+                    android:icon="@drawable/ic_email"
+                    android:title="@string/nav_email_ranking" />
+            </group>
+        </menu>
+    </item>
 
     <item android:title="@string/nav_group_database">
         <menu>
-            <item
-                android:id="@+id/nav_import_results"
-                android:icon="@drawable/ic_import"
-                android:title="Tuo tuloksia" />
-            <item
-                android:id="@+id/nav_db_classifiers"
-                android:icon="@drawable/ic_classifiers"
-                android:title="@string/nav_db_classifiers" />
-            <item
-                android:id="@+id/nav_db_competitors"
-                android:icon="@drawable/ic_competitors"
-                android:title="@string/nav_db_competitors" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_import_results"
+                    android:icon="@drawable/ic_import"
+                    android:title="Tuo tuloksia" />
+                <item
+                    android:id="@+id/nav_browse_db"
+                    android:icon="@drawable/ic_storage"
+                    android:title="@string/nav_browse_db" />
+            </group>
         </menu>
     </item>
 

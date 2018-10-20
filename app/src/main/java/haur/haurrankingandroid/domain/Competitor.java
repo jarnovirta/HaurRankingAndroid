@@ -3,6 +3,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,7 +19,7 @@ import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Competitor {
+public class Competitor implements Comparable<Competitor> {
 
 	@PrimaryKey(autoGenerate = true)
 	private Long id;
@@ -60,6 +61,13 @@ public class Competitor {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.practiScoreId = practiScoreId;
+	}
+
+	@Override
+	public int compareTo(@NonNull Competitor other) {
+		int result = this.lastName.compareTo(other.getLastName());
+		if (result != 0) return result;
+		return this.firstName.compareTo(other.getFirstName());
 	}
 
 	public Long getId() {

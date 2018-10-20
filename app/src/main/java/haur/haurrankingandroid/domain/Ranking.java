@@ -31,7 +31,7 @@ public class Ranking {
 		totalResultsCount = 0;
 		validClassifiersCount = 0;
 		competitorsWithRank = 0;
-		Set<Classifier> classifiers = new HashSet<Classifier>();
+		Set<String> classifiers = new HashSet<String>();
 		Set<Competitor> competitors = new HashSet<Competitor>();
 //		for (DivisionRanking divisionRanking : divisionRankings) {
 //			for (Classifier classifier : divisionRanking.getValidClassifiers()) {

@@ -1,14 +1,13 @@
 package haur.haurrankingandroid.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Jarno on 14.10.2018.
+ * Created by Jarno on 18.10.2018.
  */
 
-public class DateFormatUtils {
+public class DataFormatUtils {
 	public static String dateToString(Date date) {
 		if (date == null)
 			return "";
@@ -32,5 +31,13 @@ public class DateFormatUtils {
 			e.printStackTrace();
 		}
 		return date;
+	}
+	public static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 }

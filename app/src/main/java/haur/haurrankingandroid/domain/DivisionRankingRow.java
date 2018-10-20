@@ -6,9 +6,9 @@ package haur.haurrankingandroid.domain;
 
 public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 	private Competitor competitor;
-	private double resultPercentage;
-	private double bestResultsAverage;
-	private double hitFactorAverage;
+	private Double resultPercentage;
+	private Double bestResultsAverage;
+	private Double hitFactorAverage;
 	private boolean rankedCompetitor;
 	private int resultsCount;
 
@@ -16,28 +16,42 @@ public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 
 	private boolean improvedResult = false;
 
-	public DivisionRankingRow(Competitor competitor, double bestResultsAverage) {
+	public DivisionRankingRow(Competitor competitor, Double bestResultsAverage,
+	                          Double hitFactorAverage, int resultsCount) {
 		this.competitor = competitor;
 		this.bestResultsAverage = bestResultsAverage;
-		this.rankedCompetitor = rankedCompetitor;
+		if (bestResultsAverage == null) {
+			rankedCompetitor = false;
+		}
+		else rankedCompetitor = true;
+		this.hitFactorAverage = hitFactorAverage;
+		this.resultsCount = resultsCount;
 	}
 	@Override
 	public int compareTo(DivisionRankingRow other) {
-		double compareToAverage = other.getBestResultsAverage();
+
+		if (this.bestResultsAverage == null) {
+			if (other.getBestResultsAverage() == null) return compareByNames(other);
+			else return -1;
+		}
+		if (other.bestResultsAverage == null) return 1;
+
 		/* For Ascending order */
-		if (this.bestResultsAverage < compareToAverage)
-			return -1;
-		if (this.bestResultsAverage > compareToAverage)
-			return 1;
-		if (competitor == null || other == null || other.getCompetitor() == null)
-			return 0;
+			if (this.bestResultsAverage < other.getBestResultsAverage())
+				return -1;
+			if (this.bestResultsAverage > other.getBestResultsAverage())
+				return 1;
+
+		return compareByNames(other);
+
+	}
+
+	private int compareByNames(DivisionRankingRow other) {
 		int lastNameResult = other.getCompetitor().getLastName().compareTo(this.getCompetitor().getLastName());
 		if (lastNameResult != 0)
 			return lastNameResult;
 		return other.getCompetitor().getFirstName().compareTo(this.getCompetitor().getLastName());
-
 	}
-
 	public Competitor getCompetitor() {
 		return competitor;
 	}
@@ -46,27 +60,27 @@ public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 		this.competitor = competitor;
 	}
 
-	public double getResultPercentage() {
+	public Double getResultPercentage() {
 		return resultPercentage;
 	}
 
-	public void setResultPercentage(double resultPercentage) {
+	public void setResultPercentage(Double resultPercentage) {
 		this.resultPercentage = resultPercentage;
 	}
 
-	public double getBestResultsAverage() {
+	public Double getBestResultsAverage() {
 		return bestResultsAverage;
 	}
 
-	public void setBestResultsAverage(double bestResultsAverage) {
+	public void setBestResultsAverage(Double bestResultsAverage) {
 		this.bestResultsAverage = bestResultsAverage;
 	}
 
-	public double getHitFactorAverage() {
+	public Double getHitFactorAverage() {
 		return hitFactorAverage;
 	}
 
-	public void setHitFactorAverage(double hitFactorAverage) {
+	public void setHitFactorAverage(Double hitFactorAverage) {
 		this.hitFactorAverage = hitFactorAverage;
 	}
 

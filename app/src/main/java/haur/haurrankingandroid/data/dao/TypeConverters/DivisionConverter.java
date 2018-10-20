@@ -2,7 +2,6 @@ package haur.haurrankingandroid.data.dao.TypeConverters;
 
 import android.arch.persistence.room.TypeConverter;
 
-import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Division;
 
 /**

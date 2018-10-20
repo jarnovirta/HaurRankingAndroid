@@ -3,6 +3,7 @@ package haur.haurrankingandroid.data.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.List;
 
@@ -19,4 +20,15 @@ public interface MatchDao {
 
 	@Query("SELECT * FROM ipscmatch WHERE id IN (:ids)")
 	List<Match> find(List<Long> ids);
+
+	@Query("SELECT * FROM ipscmatch")
+	List<Match> findAll();
+
+	@Query("SELECT COUNT(id) FROM ipscmatch")
+	int getCount();
+
+	@Query("SELECT DISTINCT(sc.classifier) FROM scorecard sc " +
+			"INNER JOIN ipscmatch m ON sc.matchId = m.id " +
+			"WHERE m.id = :id")
+	List<String> getClassifiersForMatch(Long id);
 }

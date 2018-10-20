@@ -4,12 +4,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
-import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
 import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
 
 @Entity
@@ -23,8 +21,7 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	private Long competitorId;
 
-	@TypeConverters({ ClassifierConverter.class })
-	private Classifier classifier;
+	private String classifier;
 
 	@TypeConverters({ DivisionConverter.class })
 	private Division division;
@@ -104,7 +101,7 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	public ScoreCard() { }
 
-	public ScoreCard(Competitor competitor, Classifier classifier, double hitfactor, Division division) {
+	public ScoreCard(Competitor competitor, String classifier, double hitfactor, Division division) {
 		this.competitor = competitor;
 		this.competitorPractiScoreId = competitor.getPractiScoreId();
 		this.classifier = classifier;
@@ -337,11 +334,11 @@ public class ScoreCard implements Comparable<ScoreCard> {
 		this.hitFactor = hitFactor;
 	}
 
-	public Classifier getClassifier() {
+	public String getClassifier() {
 		return classifier;
 	}
 
-	public void setClassifier(Classifier classifier) {
+	public void setClassifier(String classifier) {
 		this.classifier = classifier;
 	}
 

@@ -17,8 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.activity.fragment.ClassifiersFragment;
-import haur.haurrankingandroid.activity.fragment.CompetitorsFragment;
+import haur.haurrankingandroid.activity.fragment.BrowseDatabaseFragment;
 import haur.haurrankingandroid.activity.fragment.ImportFragment;
 import haur.haurrankingandroid.activity.fragment.RankingFragment;
 import haur.haurrankingandroid.pdf.PdfGenerator;
@@ -32,8 +31,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		RankingService.saveTestData();
+
 		FileService.createDirectoriesIfNotExist();
+
+		RankingService.saveTestData();
 
 		setContentView(R.layout.activity_main);
 		getPermissions();
@@ -47,10 +48,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		toggle.syncState();
 
 		NavigationView navigationView = findViewById(R.id.nav_view);
+
 		navigationView.setNavigationItemSelectedListener(this);
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 				new RankingFragment()).commit();
+		navigationView.setCheckedItem(R.id.nav_ranking_list);
 
 	}
 
@@ -118,18 +121,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 		if (id == R.id.nav_ranking_list) {
+
 			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 					new RankingFragment()).commit();
 		}
 		else if (id == R.id.nav_import_results) {
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,
 					new ImportFragment()).commit();
-		} else if (id == R.id.nav_db_classifiers) {
+		} else if (id == R.id.nav_browse_db) {
 			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-					new ClassifiersFragment()).commit();
-		} else if (id == R.id.nav_db_competitors) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-					new CompetitorsFragment()).commit();
+					new BrowseDatabaseFragment()).commit();
 		}
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);

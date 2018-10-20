@@ -5,20 +5,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import haur.haurrankingandroid.data.AppDatabase;
-import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
-import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.domain.ScoreCard;
 
@@ -31,6 +26,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	private GenerateRankingResponseHandler handler;
 
 	public GenerateRankingTask(GenerateRankingResponseHandler handler) {
+
 		this.handler = handler;
 	}
 	@Override
@@ -39,18 +35,10 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
 
 		for (Division division : Division.values()) {
-			Log.d("TEST", "\n\n\t**** DIVISION: " + division.toString() + " **** ");
-
 			DivisionRanking divRank = generateDivisionRanking(division);
-//			setMatchesToCards(scoreCards);
-
-//			Map<Competitor, List<ScoreCard>> scoreCardMap = mapCardsByCompetitor(scoreCards);
-//			sortAndFilterScoreCardsMap(scoreCardMap);
-
-//			ranking.getDivisionRankings().add(generateDivisionRanking(division, scoreCardMap));
-
+			ranking.getDivisionRankings().add(divRank);
 		}
-		return null;
+		return ranking;
 	}
 
 	private DivisionRanking generateDivisionRanking(Division division) {
@@ -58,13 +46,12 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		AppDatabase db = AppDatabase.getDatabase();
 
 		// Get classifiers with min. 2 results
-		List<Classifier> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
+		List<String> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
 
 		// Average of top two hitfactors for a classifier
-		Map<Classifier, Double> classifierTopHitFactorsAveragesMap = new HashMap<>();
+		Map<String, Double> classifierTopHitFactorsAveragesMap = new HashMap<>();
 
-		for (Classifier classifier : validClassifiers) {
-			Log.d("TEST", classifier.toString() + " AVERAGE: " + db.scoreCardDao().getTopTwoHitFactorsAverage(division, classifier));
+		for (String classifier : validClassifiers) {
 			classifierTopHitFactorsAveragesMap.put(classifier,
 					db.scoreCardDao().getTopTwoHitFactorsAverage(division, classifier));
 		}
@@ -76,7 +63,6 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 		for (Competitor comp : competitors) {
 			List<ScoreCard> cards = db.scoreCardDao().getForRanking(division, comp.getId(), validClassifiers);
-
 			List<Double> competitorRelativeResults = new ArrayList<>();
 			for (ScoreCard card : cards) {
 				double relativeResult = 0.0;
@@ -93,43 +79,51 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			if (competitorRelativeResults.size() > 4) {
 				competitorRelativeResults = competitorRelativeResults.subList(0, 4);
 			}
-
-			double sum = 0.0;
-			double average = 0.0;
-			for (Double result : competitorRelativeResults) {
-				if (comp.getLastName().equals("Virta")) Log.d("TEST", "JARNON result " + result);
-				sum += result;
+			Double relativeResultAverage = null;
+			if (competitorRelativeResults.size() == 4) {
+				double relativeResultSum = 0.0;
+				for (Double result : competitorRelativeResults) {
+					relativeResultSum += result;
+				}
+				relativeResultAverage = relativeResultSum / competitorRelativeResults.size();
 			}
-			if (competitorRelativeResults.size() > 0) average = sum / competitorRelativeResults.size();
-
-			competitorRelativeResultsAverages.put(comp, average);
-
+			competitorRelativeResultsAverages.put(comp, relativeResultAverage);
 		}
-
 		DivisionRanking divisionRanking = new DivisionRanking();
-		divisionRanking.setRows(generateRows(competitorRelativeResultsAverages));
+		divisionRanking.setRows(generateRows(competitorRelativeResultsAverages, division, validClassifiers));
 
-		int rank = 1;
-		for (DivisionRankingRow row : divisionRanking.getRows()) {
-			Log.d("TEST", "ROW: " + rank++ + ". " + row.getCompetitor().getLastName() + " " + row.getBestResultsAverage());
-		}
 		return divisionRanking;
 
 	}
 
-	private List<DivisionRankingRow> generateRows(Map<Competitor, Double> competitorAveragesMap) {
+
+	private List<DivisionRankingRow> generateRows(Map<Competitor, Double> competitorResultAveragesMap,
+	                                              Division division, List<String> validClassifiers) {
+		AppDatabase db = AppDatabase.getDatabase();
 		List<DivisionRankingRow> rows = new ArrayList<>();
-		for (Competitor comp : competitorAveragesMap.keySet()) {
-			rows.add(new DivisionRankingRow(comp, competitorAveragesMap.get(comp)));
+		for (Competitor comp : competitorResultAveragesMap.keySet()) {
+			Double hfAverage = db.scoreCardDao().getCompetitorLatestHfAverage(comp.getId(), division,
+					validClassifiers);
+			int resultCount = db.scoreCardDao().getCountByCompetitor(comp.getId(), division);
+			rows.add(new DivisionRankingRow(comp, competitorResultAveragesMap.get(comp),
+					hfAverage, resultCount));
 		}
 		Collections.sort(rows);
 		Collections.reverse(rows);
+		if (rows.size() > 0) {
+			Double bestResult = rows.get(0).getBestResultsAverage();
+				for (DivisionRankingRow row : rows) {
+					if (row.getBestResultsAverage() != null && bestResult != null) {
+						row.setResultPercentage(row.getBestResultsAverage() / bestResult * 100);
+					}
+				}
+		}
 		return rows;
 	}
 
 	@Override
 	protected void onPostExecute(Ranking ranking) {
-
+		Log.d("TASK", "ON POST EXECUTE");
 		if (handler != null) handler.process(ranking);
 	}
 }

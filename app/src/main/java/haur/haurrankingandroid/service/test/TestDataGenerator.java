@@ -5,21 +5,19 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.ScoreCard;
-import haur.haurrankingandroid.util.DateFormatUtils;
+import haur.haurrankingandroid.util.DataFormatUtils;
 
 /**
  * Created by Jarno on 14.10.2018.
  */
 
 public class TestDataGenerator {
-	static Classifier[] classifiers = new Classifier[] { Classifier.CLC01, Classifier.CLC03,
-			Classifier.CLC05, Classifier.CLC07, Classifier.CLC09, Classifier.CLC11,
-			Classifier.CLC13, Classifier.CLC15, Classifier.CLC17, Classifier.CLC19 };
+	static String[] classifiers = new String[] { "CLC-01", "CLC-03", "CLC-05", "CLC-07", "CLC-09",
+			"CLC-11", "CLC-13", "CLC-15", "CLC-17", "CLC-19"};
 
 	static Competitor jarno = new Competitor("Jarno", "Virta", "jarnoPractiId");
 	static Competitor jerry = new Competitor("Jerry", "Miculek", "jerryPractiId");
@@ -76,7 +74,7 @@ public class TestDataGenerator {
 		Match newTestMatch = new Match();
 		newTestMatch.setName("New match");
 		newTestMatch.setPractiScoreId("newMatchPSId");
-		newTestMatch.setDate(DateFormatUtils.stringToDate("18.11.2017"));
+		newTestMatch.setDate(DataFormatUtils.stringToDate("18.11.2017"));
 		setCompetitorsToMatch(newTestMatch);
 		return newTestMatch;
 	}
@@ -85,7 +83,7 @@ public class TestDataGenerator {
 		Match oldTestMatch = new Match();
 		oldTestMatch.setName("Old match");
 		oldTestMatch.setPractiScoreId("oldMatchPSId");
-		oldTestMatch.setDate(DateFormatUtils.stringToDate("12.11.2017"));
+		oldTestMatch.setDate(DataFormatUtils.stringToDate("12.11.2017"));
 		setCompetitorsToMatch(oldTestMatch);
 		return oldTestMatch;
 	}
@@ -93,7 +91,7 @@ public class TestDataGenerator {
 		Match springTestMatch = new Match();
 		springTestMatch.setName("Spring match");
 		springTestMatch.setPractiScoreId("springMatchPSId");
-		springTestMatch.setDate(DateFormatUtils.stringToDate("01.04.2017"));
+		springTestMatch.setDate(DataFormatUtils.stringToDate("01.04.2017"));
 		setCompetitorsToMatch(springTestMatch);
 		return springTestMatch;
 	}
@@ -111,7 +109,7 @@ public class TestDataGenerator {
 	public static List<ScoreCard> createScoreCards(Match match) {
 		List<ScoreCard> sheets = new ArrayList<ScoreCard>();
 		int index = 0;
-		for (Classifier classifier : classifiers) {
+		for (String classifier : classifiers) {
 
 			if (match.getName().equals("New match")) {
 				if (jarnoNewMatchHitFactors[index] != null)
