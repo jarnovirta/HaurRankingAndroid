@@ -66,4 +66,7 @@ public interface ScoreCardDao {
 	@TypeConverters({ DivisionConverter.class })
 	@Query("SELECT DISTINCT(division) FROM ScoreCard")
 	List<Division> findAllDivisions();
+
+	@Query("DELETE FROM scorecard WHERE matchId = :matchId")
+	void deleteByMatch(Long matchId);
 }

@@ -1,6 +1,5 @@
 package haur.haurrankingandroid.activity.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.service.task.LoadStatisticsTask;
 
 /**
  * Created by Jarno on 13.10.2018.
@@ -21,6 +20,7 @@ import haur.haurrankingandroid.data.AppDatabase;
 public class BrowseDatabaseFragment extends Fragment {
 
 	private FragmentTabHost tabHost;
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +32,6 @@ public class BrowseDatabaseFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		tabHost = new FragmentTabHost(getActivity());
 		tabHost.setup(getActivity(), getChildFragmentManager(), R.layout.fragment_browse_db);
-
 		tabHost.addTab(tabHost.newTabSpec("db_competitions_tab").setIndicator("Kilpailut"),
 				MatchesTabFragment.class, null);
 		tabHost.addTab(tabHost.newTabSpec("db_competitors_tab").setIndicator("Kilpailijat"),

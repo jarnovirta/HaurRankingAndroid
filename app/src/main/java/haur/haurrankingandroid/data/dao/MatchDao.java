@@ -1,6 +1,7 @@
 package haur.haurrankingandroid.data.dao;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
@@ -34,4 +35,7 @@ public interface MatchDao {
 			"INNER JOIN ipscmatch m ON sc.matchId = m.id " +
 			"WHERE m.id = :id")
 	List<Classifier> getClassifiersForMatch(Long id);
+
+	@Query("DELETE FROM ipscmatch WHERE id = :id")
+	void delete(Long id);
 }

@@ -1,6 +1,5 @@
 package haur.haurrankingandroid.activity.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +14,7 @@ import java.util.List;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.activity.adapter.CompetitorListAdapter;
-import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.service.task.LoadCompetitorListTask;
 import haur.haurrankingandroid.domain.Competitor;
 
 /**

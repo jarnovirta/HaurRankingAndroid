@@ -9,6 +9,7 @@ import java.util.List;
 public class MatchListItem {
 	Match match;
 	List<Classifier> classifiers;
+	boolean selected = false;
 
 	public MatchListItem(Match match, List<Classifier> classifiers) {
 		this.match = match;
@@ -28,5 +29,13 @@ public class MatchListItem {
 
 	public void setClassifiers(List<Classifier> classifiers) {
 		this.classifiers = classifiers;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 }

@@ -1,9 +1,10 @@
-package haur.haurrankingandroid.activity.fragment;
+package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
 
 import java.util.List;
 
+import haur.haurrankingandroid.activity.fragment.CompetitorsTabFragment;
 import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Competitor;
 

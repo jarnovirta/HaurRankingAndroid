@@ -45,4 +45,5 @@ public interface CompetitorDao {
 
 	@Query("SELECT * FROM competitor")
 	List<Competitor> findAll();
+
 }

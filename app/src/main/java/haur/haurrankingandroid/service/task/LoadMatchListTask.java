@@ -1,12 +1,11 @@
-package haur.haurrankingandroid.activity.fragment;
+package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import haur.haurrankingandroid.activity.fragment.MatchesTabFragment;
 import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Match;
@@ -38,5 +37,6 @@ public class LoadMatchListTask extends AsyncTask<Void, Void, List<MatchListItem>
 	@Override
 	protected void onPostExecute(List<MatchListItem> matchListItems) {
 		fragment.setMatchList(matchListItems);
+		new LoadMatchListTask(fragment);
 	}
 }

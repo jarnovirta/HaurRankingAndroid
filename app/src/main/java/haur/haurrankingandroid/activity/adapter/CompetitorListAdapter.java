@@ -38,27 +38,29 @@ public class CompetitorListAdapter extends ArrayAdapter<Competitor> {
 
 	@NonNull
 	@Override
-	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+	public View getView(int position, @Nullable View recycledView, @NonNull ViewGroup parent) {
 		ViewHolder viewHolder;
-		if (convertView == null) {
+		if (recycledView == null || recycledView.getTag() == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			viewHolder = new ViewHolder();
 
-			convertView = inflater.inflate(R.layout.competitor_list_item, parent, false);
+			recycledView = inflater.inflate(R.layout.competitor_list_item, parent, false);
 
-			viewHolder.competitorName = (TextView) convertView.findViewById(R.id.competitor_name);
+			viewHolder.competitorName = (TextView) recycledView.findViewById(R.id.competitor_name);
+
+			recycledView.setTag(viewHolder);
 
 		}
 		else {
-			viewHolder = (ViewHolder) convertView.getTag();
+			viewHolder = (ViewHolder) recycledView.getTag();
 
 		}
 		Competitor comp = competitorList.get(position);
 		String name = comp.getLastName() + ", " + comp.getFirstName();
 		viewHolder.competitorName.setText(name);
 
-		return convertView;
+		return recycledView;
 	}
 
 }

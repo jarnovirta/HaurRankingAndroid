@@ -1,7 +1,8 @@
-package haur.haurrankingandroid.activity.fragment;
+package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
 
+import haur.haurrankingandroid.activity.fragment.BrowseDatabaseFragment;
 import haur.haurrankingandroid.data.AppDatabase;
 
 /**
