@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.service.persistence;
+package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,6 +9,7 @@ import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.ScoreCard;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.SaveMatchTaskResponseHandler;
 
 /**
  * Created by Jarno on 14.10.2018.
@@ -52,6 +53,8 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 		for (ScoreCard card : match.getScoreCards()) {
 			card.setCompetitorId(card.getCompetitor().getId());
 			card.setMatchId(match.getId());
+			// Delete old ScoreCard for the same competitor and classifier
+			db.scoreCardDao().deleteOldScoreCard(card.getCompetitorId(), card.getClassifier());
 		}
 		db.scoreCardDao().insertAll(match.getScoreCards());
 	}

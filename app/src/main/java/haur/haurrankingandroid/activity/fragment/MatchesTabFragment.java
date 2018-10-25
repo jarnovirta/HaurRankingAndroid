@@ -17,7 +17,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.activity.adapter.MatchListAdapter;
+import haur.haurrankingandroid.activity.listAdapter.MatchListAdapter;
+import haur.haurrankingandroid.event.AppEvent;
+import haur.haurrankingandroid.event.AppEventListener;
+import haur.haurrankingandroid.event.AppEventService;
+import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 import haur.haurrankingandroid.service.persistence.MatchService;
 import haur.haurrankingandroid.service.task.LoadMatchListTask;
 import haur.haurrankingandroid.domain.MatchListItem;
@@ -26,7 +30,8 @@ import haur.haurrankingandroid.domain.MatchListItem;
  * Created by Jarno on 20.10.2018.
  */
 
-public class MatchesTabFragment extends ListFragment implements ActionMode.Callback {
+public class MatchesTabFragment extends ListFragment
+		implements ActionMode.Callback, AppEventListener {
 
 	private static List<MatchListItem> matchList = new ArrayList<>();
 	private static boolean matchListSet = false;
@@ -51,7 +56,7 @@ public class MatchesTabFragment extends ListFragment implements ActionMode.Callb
 			new LoadMatchListTask(this).execute();
 			matchListSet = true;
 		}
-
+		AppEventService.addListener(this);
 		return view;
 	}
 
@@ -104,8 +109,8 @@ public class MatchesTabFragment extends ListFragment implements ActionMode.Callb
 				for (MatchListItem matchListItem : matchList) {
 					if (matchListItem.isSelected()) ids.add(matchListItem.getMatch().getId());
 				}
-				MatchService.deleteAll(ids, this);
-				new LoadMatchListTask(this).execute();
+				MatchService.deleteAll(ids);
+
 				break;
 		}
 		return true;
@@ -125,5 +130,9 @@ public class MatchesTabFragment extends ListFragment implements ActionMode.Callb
 		adapter.notifyDataSetChanged();
 	}
 
-
+	public void process(AppEvent event) {
+		if (event instanceof DatabaseUpdatedEvent) {
+			new LoadMatchListTask(this).execute();
+		}
+	}
 }

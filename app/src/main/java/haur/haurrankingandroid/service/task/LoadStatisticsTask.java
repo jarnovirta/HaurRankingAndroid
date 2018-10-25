@@ -2,18 +2,18 @@ package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
 
-import haur.haurrankingandroid.activity.fragment.BrowseDatabaseFragment;
 import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadStatisticsPostExecuteHandler;
 
 /**
  * Created by Jarno on 20.10.2018.
  */
 
 public class LoadStatisticsTask extends AsyncTask<Void, Void, Integer[]> {
-	BrowseDatabaseFragment fragment;
+	LoadStatisticsPostExecuteHandler handler;
 
-	public LoadStatisticsTask(BrowseDatabaseFragment fragment) {
-		this.fragment = fragment;
+	public LoadStatisticsTask(LoadStatisticsPostExecuteHandler handler) {
+		this.handler = handler;
 	}
 	@Override
 	protected Integer[] doInBackground(Void... voids) {
@@ -27,6 +27,7 @@ public class LoadStatisticsTask extends AsyncTask<Void, Void, Integer[]> {
 	protected void onPostExecute(Integer[] dbCounts) {
 		int competitionsCount = dbCounts[0];
 		int competitorsCount = dbCounts[1];
-		fragment.updateTabTitles(competitionsCount, competitorsCount);
+		handler.processStatistics(competitionsCount, competitorsCount);
+
 	}
 }

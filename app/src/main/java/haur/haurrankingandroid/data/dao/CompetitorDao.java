@@ -46,4 +46,7 @@ public interface CompetitorDao {
 	@Query("SELECT * FROM competitor")
 	List<Competitor> findAll();
 
+	@Query("DELETE FROM competitor WHERE id = :id")
+	void delete(Long id);
+
 }

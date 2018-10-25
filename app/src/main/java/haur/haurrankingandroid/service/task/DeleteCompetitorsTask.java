@@ -9,14 +9,13 @@ import haur.haurrankingandroid.event.AppEventService;
 import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 
 /**
- * Created by Jarno on 24.10.2018.
+ * Created by Jarno on 25.10.2018.
  */
 
-public class DeleteMatchesTask extends AsyncTask<Void, Void, Void> {
-
+public class DeleteCompetitorsTask extends AsyncTask<Void, Void, Void> {
 	private List<Long> ids;
 
-	public DeleteMatchesTask(List<Long> ids) {
+	public DeleteCompetitorsTask(List<Long> ids) {
 		this.ids = ids;
 	}
 	@Override
@@ -24,8 +23,8 @@ public class DeleteMatchesTask extends AsyncTask<Void, Void, Void> {
 		AppDatabase db = AppDatabase.getDatabase();
 
 		for (Long id : ids) {
-			db.scoreCardDao().deleteByMatch(id);
-			db.matchDao().delete(id);
+			db.scoreCardDao().deleteByCompetitor(id);
+			db.competitorDao().delete(id);
 		}
 		return null;
 	}

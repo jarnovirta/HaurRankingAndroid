@@ -1,7 +1,6 @@
-package haur.haurrankingandroid.service.ranking;
+package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +16,7 @@ import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.domain.ScoreCard;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRankingPostExecuteHandler;
 
 /**
  * Created by Jarno on 14.10.2018.
@@ -24,9 +24,9 @@ import haur.haurrankingandroid.domain.ScoreCard;
 
 public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
-	private GenerateRankingResponseHandler handler;
+	private GenerateRankingPostExecuteHandler handler;
 
-	public GenerateRankingTask(GenerateRankingResponseHandler handler) {
+	public GenerateRankingTask(GenerateRankingPostExecuteHandler handler) {
 
 		this.handler = handler;
 	}

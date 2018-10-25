@@ -11,13 +11,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.event.AppEvent;
+import haur.haurrankingandroid.event.AppEventListener;
+import haur.haurrankingandroid.event.AppEventService;
+import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 import haur.haurrankingandroid.service.task.LoadStatisticsTask;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadStatisticsPostExecuteHandler;
 
 /**
  * Created by Jarno on 13.10.2018.
  */
 
-public class BrowseDatabaseFragment extends Fragment {
+public class BrowseDatabaseFragment extends Fragment
+		implements AppEventListener, LoadStatisticsPostExecuteHandler {
 
 	private FragmentTabHost tabHost;
 
@@ -38,24 +44,29 @@ public class BrowseDatabaseFragment extends Fragment {
 				CompetitorsTabFragment.class, null);
 
 		new LoadStatisticsTask(this).execute();
-
+		AppEventService.addListener(this);
 		return tabHost;
 	}
 
-	public void updateTabTitles(int competitionsCount, int competitorsCount) {
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
 
+	@Override
+	public void process(AppEvent event) {
+		if (event instanceof DatabaseUpdatedEvent) {
+			new LoadStatisticsTask(this).execute();
+		}
+	}
+
+	@Override
+	public void processStatistics(int competitionsCount, int competitorsCount) {
 		View tabView = tabHost.getTabWidget().getChildAt(0);
 		String competitionsTabTitle = "Kilpailut (" + competitionsCount + ")";
 		((TextView) tabView.findViewById(android.R.id.title)).setText(competitionsTabTitle);
 		String competitorsTabTitle = "Kilpailijat (" + competitorsCount + ")";
 		tabView = tabHost.getTabWidget().getChildAt(1);
 		((TextView) tabView.findViewById(android.R.id.title)).setText(competitorsTabTitle);
-
 	}
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-
 }

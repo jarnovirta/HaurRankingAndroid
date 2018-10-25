@@ -10,7 +10,7 @@ import haur.haurrankingandroid.service.task.DeleteMatchesTask;
  */
 
 public class MatchService {
-	public static void deleteAll(List<Long> matchIds, MatchesTabFragment fragment) {
-		new DeleteMatchesTask(matchIds, fragment).execute();
+	public static void deleteAll(List<Long> matchIds) {
+		new DeleteMatchesTask(matchIds).execute();
 	}
 }

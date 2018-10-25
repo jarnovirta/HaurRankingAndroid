@@ -1,7 +1,6 @@
 package haur.haurrankingandroid.service.practiScore;
 
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import haur.haurrankingandroid.domain.MatchScore;
 import haur.haurrankingandroid.domain.ScoreCard;
 import haur.haurrankingandroid.domain.Stage;
 import haur.haurrankingandroid.domain.StageScore;
-import haur.haurrankingandroid.service.persistence.SaveMatchTask;
+import haur.haurrankingandroid.service.task.SaveMatchTask;
 import haur.haurrankingandroid.service.file.FileService;
 
 /**

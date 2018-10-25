@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.activity.adapter;
+package haur.haurrankingandroid.activity.listAdapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,26 +7,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.domain.Competitor;
+import haur.haurrankingandroid.domain.CompetitorListItem;
 
 /**
  * Created by Jarno on 20.10.2018.
  */
 
-public class CompetitorListAdapter extends ArrayAdapter<Competitor> {
-
-
+public class CompetitorListAdapter extends ArrayAdapter<CompetitorListItem> {
 	private final Context context;
-	private final List<Competitor> competitorList;
+	private final List<CompetitorListItem> competitorList;
+	private boolean itemsSelectable = false;
 
-	public CompetitorListAdapter(Context context, List<Competitor> competitorList) {
+	public CompetitorListAdapter(Context context, List<CompetitorListItem> competitorList) {
 		super(context, -1, competitorList);
 		this.context = context;
 		this.competitorList = competitorList;
@@ -34,6 +33,7 @@ public class CompetitorListAdapter extends ArrayAdapter<Competitor> {
 
 	private static class ViewHolder {
 		private TextView competitorName;
+		private CheckBox selectCompetitorCheckbox;
 	}
 
 	@NonNull
@@ -44,23 +44,29 @@ public class CompetitorListAdapter extends ArrayAdapter<Competitor> {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			viewHolder = new ViewHolder();
-
 			recycledView = inflater.inflate(R.layout.competitor_list_item, parent, false);
-
 			viewHolder.competitorName = (TextView) recycledView.findViewById(R.id.competitor_name);
-
+			viewHolder.selectCompetitorCheckbox = (CheckBox) recycledView.findViewById(R.id.select_competitor_checkbox);
 			recycledView.setTag(viewHolder);
-
 		}
 		else {
 			viewHolder = (ViewHolder) recycledView.getTag();
 
 		}
-		Competitor comp = competitorList.get(position);
+		Competitor comp = competitorList.get(position).getCompetitor();
 		String name = comp.getLastName() + ", " + comp.getFirstName();
 		viewHolder.competitorName.setText(name);
 
+		if (itemsSelectable) {
+			viewHolder.selectCompetitorCheckbox.setVisibility(View.VISIBLE);
+			viewHolder.selectCompetitorCheckbox.setChecked(competitorList.get(position).isSelected());
+		}
+		else viewHolder.selectCompetitorCheckbox.setVisibility(View.GONE);
+
 		return recycledView;
 	}
-
+	public void setItemsSelectable(boolean selectable) {
+		this.itemsSelectable = selectable;
+		notifyDataSetChanged();
+	}
 }

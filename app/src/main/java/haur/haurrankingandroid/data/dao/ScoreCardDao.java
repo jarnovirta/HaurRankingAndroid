@@ -69,4 +69,11 @@ public interface ScoreCardDao {
 
 	@Query("DELETE FROM scorecard WHERE matchId = :matchId")
 	void deleteByMatch(Long matchId);
+
+	@Query("DELETE FROM scorecard WHERE competitorId = :competitorId")
+	void deleteByCompetitor(Long competitorId);
+
+	@TypeConverters({ ClassifierConverter.class })
+	@Query("DELETE FROM scorecard WHERE competitorId = :competitorId AND classifier = :classifier")
+	void deleteOldScoreCard(Long competitorId, Classifier classifier);
 }

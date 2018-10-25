@@ -5,6 +5,17 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <CheckBox
+        android:id="@+id/select_competitor_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:visibility="gone">
+    </CheckBox>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +28,5 @@
             android:textColor="@android:color/black"
             android:layout_alignParentLeft="true"
             android:gravity="left" />
-
     </RelativeLayout>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package haur.haurrankingandroid.service.ranking;
+package haur.haurrankingandroid.service.task.onPostExecuteHandler;
 
 import haur.haurrankingandroid.domain.Ranking;
 
@@ -6,6 +6,6 @@ import haur.haurrankingandroid.domain.Ranking;
  * Created by Jarno on 14.10.2018.
  */
 
-public interface GenerateRankingResponseHandler {
+public interface GenerateRankingPostExecuteHandler {
 	void process(Ranking ranking);
 }
