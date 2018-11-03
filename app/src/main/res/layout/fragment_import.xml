@@ -25,6 +25,7 @@
             android:layout_below="@id/import_match_name"
             android:layout_margin="10dp"
             android:padding="10dp"
+            android:visibility="gone"
             android:text="Tuo valitut"/>
 
     </RelativeLayout>

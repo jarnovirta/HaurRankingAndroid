@@ -1,9 +1,15 @@
 package haur.haurrankingandroid.activity;
 
 import android.Manifest;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,20 +19,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+import java.io.File;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.activity.fragment.BrowseDatabaseFragment;
 import haur.haurrankingandroid.activity.fragment.ImportFragment;
 import haur.haurrankingandroid.activity.fragment.RankingFragment;
+import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.pdf.PdfGenerator;
 import haur.haurrankingandroid.service.file.FileService;
 import haur.haurrankingandroid.service.ranking.RankingService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
+	private final int CHOOSE_EXPORT_FOLDER_REQUEST_CODE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				// If request is cancelled, the result arrays are empty.
 				if (grantResults.length > 0
 						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					PdfGenerator.generatePdf();
+
 				} else {
 					finish();
 				}
@@ -112,19 +123,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.nav_ranking_list) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-					new RankingFragment()).commit();
-		}
-		else if (id == R.id.nav_import_results) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-					new ImportFragment()).commit();
-		} else if (id == R.id.nav_browse_db) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-					new BrowseDatabaseFragment()).commit();
+		switch (id) {
+			case R.id.nav_ranking_list:
+				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+						new RankingFragment()).commit();
+				break;
+
+			case R.id.nav_save_ranking:
+				Log.d("TEST", "*** SELECTING DIRECTORY ");
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+				startActivityForResult(intent.createChooser(intent, "Valitse kansio"),
+						CHOOSE_EXPORT_FOLDER_REQUEST_CODE);
+				break;
+			case R.id.nav_email:
+				RankingService.getRanking().observe(this, new Observer<Ranking> () {
+					@Override
+					public void onChanged(@Nullable Ranking ranking) {
+						if (ranking != null) {
+							Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
+							Uri uri = PdfGenerator.generatePdf(ranking);
+							intent.putExtra(Intent.EXTRA_STREAM, uri);
+							startActivity(Intent.createChooser(intent, "Lähetä sähköposti..."));
+						}
+					}
+				});
+
+				break;
+			case R.id.nav_import_results:
+				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+						new ImportFragment()).commit();
+				break;
+
+			case R.id.nav_browse_db:
+				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+						new BrowseDatabaseFragment()).commit();
+				break;
 		}
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == CHOOSE_EXPORT_FOLDER_REQUEST_CODE) {
+			Log.d("TEST", "*** DIRECOTYR " + data.getData());
+		}
 	}
 }

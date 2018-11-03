@@ -56,4 +56,22 @@ public class FileService {
 			directory.mkdirs();
 		}
 	}
+
+	public static void savePdf() {
+		try {
+			String fname = "rankingtest";
+			String directoryPath = "/sdcard/HaurRanking/pdf";
+
+			String fpath = directoryPath + fname + ".pdf";
+
+			File file = new File(fpath);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			Log.d("Main", "\n***Created file");
+
+		}
+		catch (IOException e) {
+			Log.e(TAG, e.getStackTrace().toString());		}
+	}
 }

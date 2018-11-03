@@ -1,5 +1,6 @@
 package haur.haurrankingandroid.pdf;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.itextpdf.text.Chunk;
@@ -11,13 +12,15 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import haur.haurrankingandroid.domain.Ranking;
+
 /**
  * Created by Jarno on 10.10.2018.
  */
 
 public class PdfGenerator {
 
-	public static void generatePdf() {
+	public static Uri generatePdf(Ranking ranking) {
 		/**
 		 * Creating Document
 		 */
@@ -56,12 +59,11 @@ public class PdfGenerator {
 
 			Log.d("Main", "File done");
 
-
+			return Uri.fromFile(file);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-
-
 	}
 }

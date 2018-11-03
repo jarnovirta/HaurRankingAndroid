@@ -85,7 +85,7 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 	}
 
 	private void showToastMessage(String message) {
-		activity.runOnUiThread(() -> {
+		if (activity != null) activity.runOnUiThread(() -> {
 			Toast toast = Toast.makeText(activity,
 					message,
 					Toast.LENGTH_SHORT);

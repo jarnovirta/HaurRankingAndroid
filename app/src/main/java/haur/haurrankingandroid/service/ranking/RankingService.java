@@ -29,7 +29,7 @@ public class RankingService {
 		Log.d("TEST", "\n Generating ranking data");
 		List<Match> matches = TestDataGenerator.generateTestData();
 
-//		new SaveMatchTask(new SaveMatchesResponseHandler()).execute(matches.toArray(new Match[] { }));
+//		new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
 
 	}
 

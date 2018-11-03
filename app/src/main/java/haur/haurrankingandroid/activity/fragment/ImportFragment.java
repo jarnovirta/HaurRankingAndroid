@@ -43,13 +43,14 @@ public class ImportFragment extends ListFragment {
 	private StageListAdapter adapter;
 	private final int CHOOSE_FILE_REQUEST_CODE = 1;
 	private TextView matchNameTextView;
+	Button importButton;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_import, container, false);
 		matchNameTextView = view.findViewById(R.id.import_match_name);
-		Button importButton = view.findViewById(R.id.import_button);
+		importButton = view.findViewById(R.id.import_button);
 		importButton.setOnClickListener(v -> {
 			importResults();
 		});
@@ -106,6 +107,7 @@ public class ImportFragment extends ListFragment {
 					stageListItems.add(new StageListItem(stage));
 				}
 				adapter.notifyDataSetChanged();
+				importButton.setVisibility(View.VISIBLE);
 			}
 		}
 	}
