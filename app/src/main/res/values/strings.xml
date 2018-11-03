@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">HAUR Ranking</string>
 
-
     <!--Main activity -->
     <string name="match_label">Kilpailu:</string>
 
@@ -10,8 +9,8 @@
 
     <!--Navigation Drawer-->
     <string name="nav_option_ranking_list">Ranking</string>
-    <string name="nav_save_ranking">Tallenna PDF</string>
-    <string name="nav_email_ranking">Lähetä sähköpostitse</string>
+    <string name="nav_view_pdf">Avaa PDF</string>
+    <string name="nav_email_ranking">Jaa ranking</string>
     <string name="nav_group_database">Tietokanta</string>
     <string name="nav_group_ranking">Ranking</string>
     <string name="nav_import_results">Tuo tuloksia</string>

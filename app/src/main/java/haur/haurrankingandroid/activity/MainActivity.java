@@ -3,6 +3,7 @@ package haur.haurrankingandroid.activity;
 import android.Manifest;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -22,11 +23,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
-import java.io.File;
+import java.util.Date;
 
 import haur.haurrankingandroid.R;
+import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.activity.fragment.BrowseDatabaseFragment;
 import haur.haurrankingandroid.activity.fragment.ImportFragment;
 import haur.haurrankingandroid.activity.fragment.RankingFragment;
@@ -34,6 +37,7 @@ import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.pdf.PdfGenerator;
 import haur.haurrankingandroid.service.file.FileService;
 import haur.haurrankingandroid.service.ranking.RankingService;
+import haur.haurrankingandroid.util.DataFormatUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
@@ -129,28 +133,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 						new RankingFragment()).commit();
 				break;
 
-			case R.id.nav_save_ranking:
-				Log.d("TEST", "*** SELECTING DIRECTORY ");
-				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-				intent.addCategory(Intent.CATEGORY_DEFAULT);
+			case R.id.nav_view_pdf:
+				RankingService.getRanking().observe(this, new Observer<Ranking> () {
+					@Override
+					public void onChanged(@Nullable Ranking ranking) {
+						if (ranking != null) {
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setDataAndType(PdfGenerator.generatePdf(ranking, null),"application/pdf");
+							intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-				startActivityForResult(intent.createChooser(intent, "Valitse kansio"),
-						CHOOSE_EXPORT_FOLDER_REQUEST_CODE);
+							try {
+								startActivity(Intent.createChooser(intent, "Avaa PDF"));
+							}
+							catch (ActivityNotFoundException e) {
+								String message = "Laitteella ei ole PDF-ohjelmaa";
+								Toast toast = Toast.makeText(RankingAppContext.getAppContext(),
+										message,
+										Toast.LENGTH_SHORT);
+								toast.show();
+							}
+						}
+					}
+				});
 				break;
+
 			case R.id.nav_email:
 				RankingService.getRanking().observe(this, new Observer<Ranking> () {
 					@Override
 					public void onChanged(@Nullable Ranking ranking) {
 						if (ranking != null) {
-							Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
-							Uri uri = PdfGenerator.generatePdf(ranking);
+							Intent intent = new Intent(Intent.ACTION_SEND);
+							intent.setType(".pdf -> application/pdf");
+							Uri uri = PdfGenerator.generatePdf(ranking, null);
 							intent.putExtra(Intent.EXTRA_STREAM, uri);
-							startActivity(Intent.createChooser(intent, "Lähetä sähköposti..."));
+							String subject = "Haur Ranking " + DataFormatUtils.dateToString(new Date());
+							intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+							try {
+								startActivity(Intent.createChooser(intent, "Lähetä sähköposti..."));
+							} catch (ActivityNotFoundException e) {
+								String message = "Laitteella ei ole sähköpostiohjelmaa";
+								Toast toast = Toast.makeText(RankingAppContext.getAppContext(),
+										message,
+										Toast.LENGTH_SHORT);
+								toast.show();
+							}
 						}
 					}
 				});
-
 				break;
+
 			case R.id.nav_import_results:
 				getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 						new ImportFragment()).commit();

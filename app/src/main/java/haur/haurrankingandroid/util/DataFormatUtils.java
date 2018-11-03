@@ -40,4 +40,10 @@ public class DataFormatUtils {
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
 	}
+	public static String formatTwoDecimalNumberToString(double number) {
+		String returnString = String.valueOf(number);
+		if (returnString.lastIndexOf('.') == returnString.length() - 2)
+			returnString += "0";
+		return returnString;
+	}
 }
