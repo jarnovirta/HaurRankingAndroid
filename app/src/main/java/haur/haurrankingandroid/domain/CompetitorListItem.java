@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
  */
 
 public class CompetitorListItem implements Comparable<CompetitorListItem> {
-	Competitor competitor;
-	boolean selected = false;
+	private Competitor competitor;
+	private boolean selected = false;
 
 	public CompetitorListItem(Competitor competitor) {
 		this.competitor = competitor;

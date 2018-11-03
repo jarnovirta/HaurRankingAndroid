@@ -4,16 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
-
     <CheckBox
-        android:id="@+id/select_competitor_checkbox"
+        android:id="@+id/select_stage_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:visibility="gone">
+        android:paddingBottom="10dp">
     </CheckBox>
 
     <RelativeLayout
@@ -21,13 +16,19 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp">
         <TextView
-            android:id="@+id/competitor_name"
-            android:layout_width="200dp"
-            android:textSize="16dp"
+            android:id="@+id/stage_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
             android:layout_alignParentLeft="true"
-            android:gravity="left"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"/>
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/classifier_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/stage_name"/>
+
     </RelativeLayout>
 </LinearLayout>

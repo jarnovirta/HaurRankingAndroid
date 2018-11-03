@@ -7,8 +7,8 @@ import java.util.List;
  */
 
 public class MatchListItem {
-	Match match;
-	List<Classifier> classifiers;
+	private Match match;
+	private List<Classifier> classifiers;
 	boolean selected = false;
 
 	public MatchListItem(Match match, List<Classifier> classifiers) {

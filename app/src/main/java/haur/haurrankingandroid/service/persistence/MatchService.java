@@ -13,4 +13,6 @@ public class MatchService {
 	public static void deleteAll(List<Long> matchIds) {
 		new DeleteMatchesTask(matchIds).execute();
 	}
+
+
 }

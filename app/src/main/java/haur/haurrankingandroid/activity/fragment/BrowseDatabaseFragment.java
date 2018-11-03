@@ -1,5 +1,7 @@
 package haur.haurrankingandroid.activity.fragment;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,11 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import haur.haurrankingandroid.R;
-import haur.haurrankingandroid.event.AppEvent;
-import haur.haurrankingandroid.event.AppEventListener;
-import haur.haurrankingandroid.event.AppEventService;
-import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
+import haur.haurrankingandroid.domain.MatchListItem;
 import haur.haurrankingandroid.service.task.LoadStatisticsTask;
 import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadStatisticsPostExecuteHandler;
 
@@ -22,14 +23,21 @@ import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadStatisticsP
  * Created by Jarno on 13.10.2018.
  */
 
-public class BrowseDatabaseFragment extends Fragment
-		implements AppEventListener, LoadStatisticsPostExecuteHandler {
+public class BrowseDatabaseFragment extends Fragment {
 
 	private FragmentTabHost tabHost;
+	private BrowseDatabaseViewModel viewModel;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		viewModel = ViewModelProviders.of(getActivity()).get(BrowseDatabaseViewModel.class);
+		viewModel.getMatchListItems().observe(this, newList -> {
+			updateTabTitles();
+		});
+		viewModel.getCompetitorListItems().observe(this, newList -> {
+			updateTabTitles();
+		});
 
 	}
 
@@ -43,8 +51,6 @@ public class BrowseDatabaseFragment extends Fragment
 		tabHost.addTab(tabHost.newTabSpec("db_competitors_tab").setIndicator("Kilpailijat"),
 				CompetitorsTabFragment.class, null);
 
-		new LoadStatisticsTask(this).execute();
-		AppEventService.addListener(this);
 		return tabHost;
 	}
 
@@ -53,19 +59,27 @@ public class BrowseDatabaseFragment extends Fragment
 		super.onPause();
 	}
 
-	@Override
-	public void process(AppEvent event) {
-		if (event instanceof DatabaseUpdatedEvent) {
-			new LoadStatisticsTask(this).execute();
-		}
-	}
+	public void updateTabTitles() {
 
-	@Override
-	public void processStatistics(int competitionsCount, int competitorsCount) {
+		Integer competitionsCount = null;
+		Integer competitorsCount = null;
+
+		if (viewModel.getMatchListItems() != null
+				&& viewModel.getMatchListItems().getValue() != null) {
+			competitionsCount = viewModel.getMatchListItems().getValue().size();
+		}
+		if (viewModel.getCompetitorListItems() != null
+				&& viewModel.getCompetitorListItems().getValue() != null) {
+			competitorsCount = viewModel.getCompetitorListItems().getValue().size();
+		}
+
 		View tabView = tabHost.getTabWidget().getChildAt(0);
-		String competitionsTabTitle = "Kilpailut (" + competitionsCount + ")";
+		String competitionsTabTitle = "Kilpailut";
+		if (competitionsCount != null) competitionsTabTitle += " (" + competitionsCount + ")";
 		((TextView) tabView.findViewById(android.R.id.title)).setText(competitionsTabTitle);
-		String competitorsTabTitle = "Kilpailijat (" + competitorsCount + ")";
+
+		String competitorsTabTitle = "Kilpailijat";
+		if (competitorsCount != null) competitorsTabTitle += " (" + competitorsCount + ")";
 		tabView = tabHost.getTabWidget().getChildAt(1);
 		((TextView) tabView.findViewById(android.R.id.title)).setText(competitorsTabTitle);
 	}

@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import haur.haurrankingandroid.data.AppDatabase;
-import haur.haurrankingandroid.event.AppEventService;
-import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 
 /**
  * Created by Jarno on 24.10.2018.
@@ -28,11 +26,5 @@ public class DeleteMatchesTask extends AsyncTask<Void, Void, Void> {
 			db.matchDao().delete(id);
 		}
 		return null;
-	}
-
-	@Override
-	protected void onPostExecute(Void aVoid) {
-		super.onPostExecute(aVoid);
-		AppEventService.emit(new DatabaseUpdatedEvent());
 	}
 }

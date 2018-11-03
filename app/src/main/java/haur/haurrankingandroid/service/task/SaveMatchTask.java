@@ -1,10 +1,13 @@
 package haur.haurrankingandroid.service.task;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
+import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Match;
@@ -18,16 +21,22 @@ import haur.haurrankingandroid.service.task.onPostExecuteHandler.SaveMatchTaskRe
 public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 
 	private SaveMatchTaskResponseHandler handler;
+	private Activity activity;
 
-	public SaveMatchTask(SaveMatchTaskResponseHandler handler) {
+	public SaveMatchTask(SaveMatchTaskResponseHandler handler, Activity activity) {
 		this.handler = handler;
+		this.activity = activity;
 	}
 	@Override
 	protected Void doInBackground(Match... params) {
 		try {
+			AppDatabase db = AppDatabase.getDatabase();
 			for (Match match : params) {
-				AppDatabase db = AppDatabase.getDatabase();
-				match.setId(db.matchDao().insert(match));
+				Match oldMatch = db.matchDao().findByNameAndDate(match.getName(), match.getDate());
+				if (oldMatch == null) {
+					match.setId(db.matchDao().insert(match));
+				}
+				else match.setId(oldMatch.getId());
 				if (match.getCompetitors() != null && match.getCompetitors().size() > 0) {
 					saveCompetitors(match.getCompetitors(), match.getId());
 				}
@@ -39,16 +48,20 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 		}
 		catch (Exception e) {
 			Log.e("SaveDataTask", e.getMessage(), e);
+			showToastMessage("Tapahtui virhe!");
+
 		}
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Void aVoid) {
+		showToastMessage("Tulokset tallennettu!");
+
 		if (handler != null) handler.process();
 	}
 
-	private static void saveScoreCards(Match match) {
+	private void saveScoreCards(Match match) {
 		AppDatabase db = AppDatabase.getDatabase();
 		for (ScoreCard card : match.getScoreCards()) {
 			card.setCompetitorId(card.getCompetitor().getId());
@@ -58,7 +71,7 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 		}
 		db.scoreCardDao().insertAll(match.getScoreCards());
 	}
-	private static void saveCompetitors(List<Competitor> competitors, Long matchId) {
+	private void saveCompetitors(List<Competitor> competitors, Long matchId) {
 		AppDatabase db = AppDatabase.getDatabase();
 
 		for (Competitor comp : competitors) {
@@ -69,5 +82,14 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 				comp.setId(db.competitorDao().insert(comp));
 			}
 		}
+	}
+
+	private void showToastMessage(String message) {
+		activity.runOnUiThread(() -> {
+			Toast toast = Toast.makeText(activity,
+					message,
+					Toast.LENGTH_SHORT);
+			toast.show();
+		});
 	}
 }

@@ -10,16 +10,17 @@ import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchListItem;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadMatchListHandler;
 
 /**
  * Created by Jarno on 20.10.2018.
  */
 
 public class LoadMatchListTask extends AsyncTask<Void, Void, List<MatchListItem>> {
-	private MatchesTabFragment fragment;
+	private LoadMatchListHandler handler;
 
-	public LoadMatchListTask(MatchesTabFragment fragment) {
-		this.fragment = fragment;
+	public LoadMatchListTask(LoadMatchListHandler handler) {
+		this.handler = handler;
 	}
 	@Override
 	protected List<MatchListItem> doInBackground(Void... voids) {
@@ -36,7 +37,6 @@ public class LoadMatchListTask extends AsyncTask<Void, Void, List<MatchListItem>
 
 	@Override
 	protected void onPostExecute(List<MatchListItem> matchListItems) {
-		fragment.setMatchList(matchListItems);
-		new LoadMatchListTask(fragment);
+		handler.process(matchListItems);
 	}
 }

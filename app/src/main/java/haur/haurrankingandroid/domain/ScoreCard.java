@@ -34,6 +34,10 @@ public class ScoreCard implements Comparable<ScoreCard> {
 	@Ignore
 	private Match match;
 
+	@JsonProperty("stage_uuid")
+	@Ignore
+	private String stagePractiScoreId;
+
 	@JsonProperty("shtr")
 	@Ignore
 	private String competitorPractiScoreId;
@@ -366,5 +370,13 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	public void setMatch(Match match) {
 		this.match = match;
+	}
+
+	public String getStagePractiScoreId() {
+		return stagePractiScoreId;
+	}
+
+	public void setStagePractiScoreId(String stagePractiScoreId) {
+		this.stagePractiScoreId = stagePractiScoreId;
 	}
 }

@@ -61,7 +61,7 @@ public class MatchListAdapter extends ArrayAdapter<MatchListItem>  {
 			viewHolder = (ViewHolder) recycledView.getTag();
 		}
 
-		MatchListItem item = matchList.get(position);
+		final MatchListItem item = matchList.get(position);
 		viewHolder.name.setText(item.getMatch().getName());
 		viewHolder.date.setText(DataFormatUtils.dateToString(item.getMatch().getDate()));
 		String classifiersList = "";
@@ -75,6 +75,12 @@ public class MatchListAdapter extends ArrayAdapter<MatchListItem>  {
 		if (itemsSelectable) {
 			viewHolder.selectMatchCheckBox.setVisibility(View.VISIBLE);
 			viewHolder.selectMatchCheckBox.setChecked(item.isSelected());
+			viewHolder.selectMatchCheckBox.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					item.setSelected(((CheckBox) v).isChecked());
+				}
+			});
 		}
 		else viewHolder.selectMatchCheckBox.setVisibility(View.GONE);
 

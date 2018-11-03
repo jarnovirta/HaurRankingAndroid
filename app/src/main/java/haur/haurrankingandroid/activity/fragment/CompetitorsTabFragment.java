@@ -1,5 +1,7 @@
 package haur.haurrankingandroid.activity.fragment;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,47 +23,43 @@ import java.util.List;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.activity.listAdapter.CompetitorListAdapter;
-import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.CompetitorListItem;
-import haur.haurrankingandroid.domain.MatchListItem;
-import haur.haurrankingandroid.event.AppEvent;
-import haur.haurrankingandroid.event.AppEventListener;
-import haur.haurrankingandroid.event.AppEventService;
-import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 import haur.haurrankingandroid.service.persistence.CompetitorService;
-import haur.haurrankingandroid.service.persistence.MatchService;
+import haur.haurrankingandroid.service.ranking.RankingService;
 import haur.haurrankingandroid.service.task.LoadCompetitorListTask;
-import haur.haurrankingandroid.service.task.LoadMatchListTask;
 
 /**
  * Created by Jarno on 20.10.2018.
  */
 
 public class CompetitorsTabFragment extends ListFragment
-		implements ActionMode.Callback, AppEventListener {
-	private static List<CompetitorListItem> competitorItems = new ArrayList<>();
-	private static boolean competitorsSet = false;
+		implements ActionMode.Callback {
+	private List<CompetitorListItem> competitorItems = new ArrayList<>();
 	private CompetitorListAdapter adapter;
 	private boolean actionMode = false;
+	private BrowseDatabaseViewModel viewModel;
 
-	public void setCompetitors(List<CompetitorListItem> newCompetitors) {
-		competitorItems.clear();
-		Collections.sort(newCompetitors);
-		for (CompetitorListItem comp : newCompetitors) competitorItems.add(comp);
-		adapter.notifyDataSetChanged();
+
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		viewModel = ViewModelProviders.of(getActivity()).get(BrowseDatabaseViewModel.class);
+		viewModel.getCompetitorListItems().observe(this, newCompetitorList -> {
+			setCompetitors(newCompetitorList);
+		});
 	}
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+
 		View view = inflater.inflate(R.layout.db_competitors_tab_fragment, container, false);
 		adapter = new CompetitorListAdapter(this.getActivity(),
 				competitorItems);
 		setListAdapter(adapter);
-		if (!competitorsSet) {
-			new LoadCompetitorListTask(this).execute();
-			competitorsSet = true;
-		}
-		AppEventService.addListener(this);
+
 		return view;
 	}
 
@@ -72,7 +70,6 @@ public class CompetitorsTabFragment extends ListFragment
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.d("TEST", "LONG CLICK");
 				if (!actionMode) {
 					CompetitorListItem item = competitorItems.get(position);
 					item.setSelected(true);
@@ -119,7 +116,9 @@ public class CompetitorsTabFragment extends ListFragment
 					if (compListItem.isSelected()) ids.add(compListItem.getCompetitor().getId());
 				}
 				CompetitorService.deleteAll(ids);
-				new LoadCompetitorListTask(this).execute();
+				viewModel.update();
+				RankingService.generateRanking();
+
 				break;
 		}
 		return true;
@@ -131,10 +130,13 @@ public class CompetitorsTabFragment extends ListFragment
 		adapter.setItemsSelectable(false);
 		adapter.notifyDataSetChanged();
 	}
-	public void process(AppEvent event) {
-		if (event instanceof DatabaseUpdatedEvent) {
-			new LoadCompetitorListTask(this).execute();
-		}
+
+	public void setCompetitors(List<CompetitorListItem> newCompetitors) {
+		competitorItems.clear();
+		Collections.sort(newCompetitors);
+		competitorItems.addAll(newCompetitors);
+		adapter.notifyDataSetChanged();
 	}
+
 }
 

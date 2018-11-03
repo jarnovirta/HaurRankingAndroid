@@ -2,6 +2,7 @@ package haur.haurrankingandroid.activity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +27,18 @@ import haur.haurrankingandroid.activity.listAdapter.RankingListAdapter;
 import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Ranking;
-import haur.haurrankingandroid.event.AppEvent;
-import haur.haurrankingandroid.event.AppEventListener;
-import haur.haurrankingandroid.event.AppEventService;
-import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
-import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRankingPostExecuteHandler;
-import haur.haurrankingandroid.service.task.GenerateRankingTask;
+import haur.haurrankingandroid.service.ranking.RankingService;
+
 
 /**
  * Created by Jarno on 13.10.2018.
  */
 
-public class RankingFragment extends ListFragment
-		implements AppEventListener, GenerateRankingPostExecuteHandler {
+public class RankingFragment extends ListFragment {
 
 	private static Ranking ranking;
 	private static DivisionRanking currentDivisionRanking;
 	private static List<DivisionRankingRow> currentRows = new ArrayList<>();
-	private static boolean rankingSet = false;
 	private RankingListAdapter adapter;
 	private static List<String> divisionSpinnerItems = new ArrayList<>();
 
@@ -48,19 +49,24 @@ public class RankingFragment extends ListFragment
 	                         ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_ranking, container, false);
 
+		setSpinner(view);
+
 		adapter = new RankingListAdapter(this.getActivity(),
 				currentRows);
 		setListAdapter(adapter);
 
-		if (!rankingSet) {
-			new GenerateRankingTask(this).execute();
-			rankingSet = true;
-		}
-		setSpinner(view);
-		if (currentDivisionRanking != null) populateDivisionSpinner();
+		RankingService.getRanking().observe(this, newRanking -> {
+			Log.d("TEST", "*** SETTING RANKING VIEW WITH NEWRANKING");
+			updateView(newRanking);
+		});
 
-		AppEventService.addListener(this);
 		return view;
+	}
+
+	private void updateView(Ranking newRanking) {
+		setRanking(newRanking);
+		if (ranking != null) populateDivisionSpinner();
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -80,11 +86,6 @@ public class RankingFragment extends ListFragment
 		super.onPause();
 	}
 
-	@Override
-	public void process(Ranking ranking) {
-			setRanking(ranking);
-		}
-
 	private void setSpinner(View view) {
 		divisionSpinner = view.findViewById(R.id.division_spinner);
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
@@ -95,6 +96,8 @@ public class RankingFragment extends ListFragment
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setCurrentDivision(position);
+				adapter.notifyDataSetChanged();
+
 			}
 
 			@Override
@@ -104,13 +107,10 @@ public class RankingFragment extends ListFragment
 		});
 	}
 	public void setRanking(Ranking newRanking) {
-		Log.d("TEST", "**** SETTING RANKING");
 		ranking = newRanking;
 		if (ranking.getDivisionRankings() != null && ranking.getDivisionRankings().size() > 0) {
 			setCurrentDivision(0);
 		}
-		populateDivisionSpinner();
-		((ArrayAdapter) divisionSpinner.getAdapter()).notifyDataSetChanged();
 	}
 
 	private void setCurrentDivision(int divisionIndex) {
@@ -121,27 +121,27 @@ public class RankingFragment extends ListFragment
 				if (row.isRankedCompetitor()) currentRows.add(row);
 			}
 		}
-		adapter.notifyDataSetChanged();
-
 	}
 
 	public void populateDivisionSpinner() {
-		List<String> divisions = new ArrayList<>();
-		for (DivisionRanking divRank : ranking.getDivisionRankings()) {
-			divisions.add(divRank.getDivision().toString());
-		}
-		divisionSpinnerItems.clear();
-		for (String div : divisions) {
-			divisionSpinnerItems.add(div.toString());
-		}
+		boolean spinnerVisible = false;
+		if (ranking.getDivisionRankings() != null) {
+			List<String> divisions = new ArrayList<>();
+			for (DivisionRanking divRank : ranking.getDivisionRankings()) {
+				divisions.add(divRank.getDivision().toString());
+			}
+			if (divisions.size() > 0) {
+				spinnerVisible = true;
+				divisionSpinner.setVisibility(View.VISIBLE);
+				divisionSpinnerItems.clear();
+				for (String div : divisions) {
+					divisionSpinnerItems.add(div.toString());
+				}
+				((ArrayAdapter<String>) divisionSpinner.getAdapter()).notifyDataSetChanged();
 
-	}
-
-	@Override
-	public void process(AppEvent event) {
-		if (event instanceof DatabaseUpdatedEvent) {
-			Log.d("TEST", "***** GENERATING NEW RANKING ***** ");
-			new GenerateRankingTask(this).execute();
+			}
 		}
+		if (spinnerVisible) divisionSpinner.setVisibility(View.VISIBLE);
+		else divisionSpinner.setVisibility(View.GONE);
 	}
 }

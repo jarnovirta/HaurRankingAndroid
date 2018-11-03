@@ -26,4 +26,14 @@
         android:layout_height="fill_parent"
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent" />
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="Ranking tyhjä">
+    </TextView>
+
 </LinearLayout>

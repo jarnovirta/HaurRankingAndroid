@@ -1,6 +1,7 @@
 package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,6 +126,9 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 	@Override
 	protected void onPostExecute(Ranking ranking) {
-		if (handler != null) handler.process(ranking);
+		if (handler != null) {
+			Log.d("TEST", "TASK POST EXECUTE");
+			handler.process(ranking);
+		}
 	}
 }

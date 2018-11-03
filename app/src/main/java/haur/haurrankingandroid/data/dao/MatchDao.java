@@ -6,9 +6,11 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
 
+import java.util.Date;
 import java.util.List;
 
 import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
+import haur.haurrankingandroid.data.dao.TypeConverters.DateConverter;
 import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Match;
 
@@ -38,4 +40,8 @@ public interface MatchDao {
 
 	@Query("DELETE FROM ipscmatch WHERE id = :id")
 	void delete(Long id);
+
+	@TypeConverters(DateConverter.class)
+	@Query("SELECT * FROM ipscmatch WHERE name = :name AND date = :date")
+	Match findByNameAndDate(String name, Date date);
 }

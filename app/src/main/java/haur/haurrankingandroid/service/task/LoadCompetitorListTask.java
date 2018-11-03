@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import haur.haurrankingandroid.activity.fragment.CompetitorsTabFragment;
 import haur.haurrankingandroid.data.AppDatabase;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.CompetitorListItem;
+import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadCompetitorListHandler;
 
 /**
  * Created by Jarno on 20.10.2018.
@@ -16,10 +16,10 @@ import haur.haurrankingandroid.domain.CompetitorListItem;
 
 public class LoadCompetitorListTask extends AsyncTask<Void, Void, List<CompetitorListItem>> {
 
-	private CompetitorsTabFragment fragment;
+	private LoadCompetitorListHandler handler;
 
-	public LoadCompetitorListTask(CompetitorsTabFragment fragment) {
-		this.fragment = fragment;
+	public LoadCompetitorListTask(LoadCompetitorListHandler handler) {
+		this.handler = handler;
 	}
 
 	@Override
@@ -35,6 +35,6 @@ public class LoadCompetitorListTask extends AsyncTask<Void, Void, List<Competito
 
 	@Override
 	protected void onPostExecute(List<CompetitorListItem> newCompetitorList) {
-		fragment.setCompetitors(newCompetitorList);
+		handler.process(newCompetitorList);
 	}
 }

@@ -20,51 +20,43 @@ import haur.haurrankingandroid.service.file.FileService;
  */
 
 public class PractiScoreDataService {
-	public static void importFromFile(final Uri uri) {
 
-		Object[] exportFileData = FileService.readPractiScoreExportFile(uri);
+	public static Match readMatchFromFile(final Uri uri) {
+		Match match = (Match) FileService.readPractiScoreExportFile(uri)[0];
+		MatchScore matchScore = (MatchScore) FileService.readPractiScoreExportFile(uri)[1];
+		if (matchScore.getStageScores() != null) {
 
-		Match match = (Match) exportFileData[0];
+			List<ScoreCard> cards = new ArrayList<>();
 
-		MatchScore matchScore = (MatchScore) exportFileData[1];
-
-		// List all ScoreCards for match
-		List<ScoreCard> cards = new ArrayList<ScoreCard>();
-
-		for (StageScore ss : matchScore.getStageScores()) {
-			Stage stage = getStage(match, ss.getStageUuid());
-			prepareScoreCards(ss.getScoreCards(), match, stage);
-			cards.addAll(ss.getScoreCards());
-		}
-		if (cards.size() > 0) {
-			new SaveMatchTask(null).execute(match);
-		}
-	}
-
-	private static void prepareScoreCards(List<ScoreCard> cards, Match match, Stage stage) {
-		if (stage.getClassifierCode() != null) {
-			Classifier classifier = Classifier.fromPractiScoreCode(stage.getClassifierCode());
-
-			for (ScoreCard card : cards) {
-				card.setClassifier(classifier);
-				card.setCompetitor(getCompetitor(match, card.getCompetitorPractiScoreId()));
-				card.setHitsAndPoints();
+			for (StageScore ss : matchScore.getStageScores()) {
+				Stage stage = getStage(match.getStages(), ss.getStageUuid());
+				if (stage != null && !stage.isDeleted()) {
+					if (ss.getScoreCards() != null) {
+						for (ScoreCard card : ss.getScoreCards()) {
+							card.setCompetitor(getCompetitor(match.getCompetitors(), card.getCompetitorPractiScoreId()));
+							if (!card.getCompetitor().isDisqualified()) {
+								card.setHitsAndPoints();
+								card.setStagePractiScoreId(ss.getStageUuid());
+								card.setDivision(card.getCompetitor().getDivision());
+								cards.add(card);
+							}
+						}
+					}
+				}
 			}
+			match.setScoreCards(cards);
 		}
+		return match;
 	}
-	private static Stage getStage(Match match, String stagePractiScoreId) {
-		for (Stage stage : match.getStages()) {
-			if (stage.getPractiScoreId().equals(stagePractiScoreId)) return stage;
-		}
+
+	private static Competitor getCompetitor(List<Competitor> comps, String practiScoreId) {
+		for (Competitor comp : comps) if (comp.getPractiScoreId().equals(practiScoreId)) return comp;
 		return null;
 	}
 
-	private static Competitor getCompetitor(Match match, String competitorPractiScoreId) {
-		for (Competitor comp : match.getCompetitors()) {
-			if (comp.getPractiScoreId().equals(competitorPractiScoreId)) return comp;
-		}
+	private static Stage getStage(List<Stage> stages, String practiScoreId) {
+		for (Stage stage : stages) if (stage.getPractiScoreId().equals(practiScoreId)) return stage;
 		return null;
 	}
-
 }
 

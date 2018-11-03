@@ -38,7 +38,7 @@ public class CompetitorListAdapter extends ArrayAdapter<CompetitorListItem> {
 
 	@NonNull
 	@Override
-	public View getView(int position, @Nullable View recycledView, @NonNull ViewGroup parent) {
+	public View getView(final int position, @Nullable View recycledView, @NonNull ViewGroup parent) {
 		ViewHolder viewHolder;
 		if (recycledView == null || recycledView.getTag() == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -60,6 +60,12 @@ public class CompetitorListAdapter extends ArrayAdapter<CompetitorListItem> {
 		if (itemsSelectable) {
 			viewHolder.selectCompetitorCheckbox.setVisibility(View.VISIBLE);
 			viewHolder.selectCompetitorCheckbox.setChecked(competitorList.get(position).isSelected());
+			viewHolder.selectCompetitorCheckbox.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					competitorList.get(position).setSelected(((CheckBox) v).isChecked());
+				}
+			});
 		}
 		else viewHolder.selectCompetitorCheckbox.setVisibility(View.GONE);
 

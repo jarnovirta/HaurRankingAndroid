@@ -1,5 +1,6 @@
 package haur.haurrankingandroid.activity.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,11 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.activity.listAdapter.MatchListAdapter;
-import haur.haurrankingandroid.event.AppEvent;
-import haur.haurrankingandroid.event.AppEventListener;
-import haur.haurrankingandroid.event.AppEventService;
-import haur.haurrankingandroid.event.DatabaseUpdatedEvent;
 import haur.haurrankingandroid.service.persistence.MatchService;
+import haur.haurrankingandroid.service.ranking.RankingService;
 import haur.haurrankingandroid.service.task.LoadMatchListTask;
 import haur.haurrankingandroid.domain.MatchListItem;
 
@@ -31,17 +29,24 @@ import haur.haurrankingandroid.domain.MatchListItem;
  */
 
 public class MatchesTabFragment extends ListFragment
-		implements ActionMode.Callback, AppEventListener {
+		implements ActionMode.Callback {
 
-	private static List<MatchListItem> matchList = new ArrayList<>();
-	private static boolean matchListSet = false;
+	private List<MatchListItem> matchList = new ArrayList<>();
 	private MatchListAdapter adapter;
 	private boolean actionMode = false;
+	private BrowseDatabaseViewModel viewModel;
 
 	public void setMatchList(List<MatchListItem> items) {
 		matchList.clear();
-		for (MatchListItem item : items) matchList.add(item);
+		matchList.addAll(items);
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		viewModel = ViewModelProviders.of(getActivity()).get(BrowseDatabaseViewModel.class);;
+		viewModel.getMatchListItems().observe(this, newMatchList -> setMatchList(newMatchList));
 	}
 
 	@Nullable
@@ -52,11 +57,7 @@ public class MatchesTabFragment extends ListFragment
 				matchList);
 		adapter.setItemsSelectable(actionMode);
 		setListAdapter(adapter);
-		if (!matchListSet) {
-			new LoadMatchListTask(this).execute();
-			matchListSet = true;
-		}
-		AppEventService.addListener(this);
+
 		return view;
 	}
 
@@ -110,7 +111,9 @@ public class MatchesTabFragment extends ListFragment
 					if (matchListItem.isSelected()) ids.add(matchListItem.getMatch().getId());
 				}
 				MatchService.deleteAll(ids);
-
+				viewModel.update();
+				Log.d("TEST", "CALLING GENERATE RANKING");
+				RankingService.generateRanking();
 				break;
 		}
 		return true;
@@ -130,9 +133,4 @@ public class MatchesTabFragment extends ListFragment
 		adapter.notifyDataSetChanged();
 	}
 
-	public void process(AppEvent event) {
-		if (event instanceof DatabaseUpdatedEvent) {
-			new LoadMatchListTask(this).execute();
-		}
-	}
 }
