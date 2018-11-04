@@ -28,7 +28,7 @@ public class RankingService {
 		Log.d("TEST", "\n Generating ranking data");
 		List<Match> matches = TestDataGenerator.generateTestData();
 
-		new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
+		// new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
 
 	}
 
@@ -49,6 +49,7 @@ public class RankingService {
 	}
 
 	public static void generateRanking() {
+
 		new GenerateRankingTask(newRanking -> {
 				ranking.postValue(newRanking);
 		}).execute();

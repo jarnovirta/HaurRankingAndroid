@@ -8,8 +8,6 @@ import android.arch.persistence.room.TypeConverters;
 import java.util.List;
 import java.util.Set;
 
-import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
-import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
 import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Division;
@@ -29,7 +27,6 @@ public interface CompetitorDao {
 	@Query("SELECT * FROM competitor WHERE firstName LIKE :firstName AND lastName LIKE :lastName")
 	Competitor findByName(String firstName, String lastName);
 
-	@TypeConverters({ DivisionConverter.class, ClassifierConverter.class})
 	@Query("SELECT * FROM competitor WHERE id IN " +
 			"(SELECT competitor_id FROM " +
 			"(SELECT c.id as competitor_id, count(sc.id) as scorecard_count " +

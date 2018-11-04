@@ -1,9 +1,5 @@
 package haur.haurrankingandroid.domain;
 
-import android.arch.persistence.room.TypeConverters;
-
-import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
-
 /**
  * Created by Jarno on 13.10.2018.
  */

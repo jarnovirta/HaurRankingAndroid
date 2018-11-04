@@ -3,6 +3,7 @@ package haur.haurrankingandroid.data;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Environment;
 
 import haur.haurrankingandroid.RankingAppContext;
@@ -10,6 +11,7 @@ import haur.haurrankingandroid.data.dao.CompetitorDao;
 import haur.haurrankingandroid.data.dao.MatchDao;
 import haur.haurrankingandroid.data.dao.RankingDao;
 import haur.haurrankingandroid.data.dao.ScoreCardDao;
+import haur.haurrankingandroid.data.dao.TypeConverters.DomainTypeConverters;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
@@ -22,8 +24,9 @@ import haur.haurrankingandroid.domain.ScoreCard;
  * Created by Jarno on 13.10.2018.
  */
 
+@TypeConverters({DomainTypeConverters.class})
 @Database(entities = { Match.class, ScoreCard.class, Competitor.class, Ranking.class,
-		DivisionRanking.class, DivisionRankingRow.class, RankingDataChangedEntity.class}, version = 1)
+		DivisionRanking.class, DivisionRankingRow.class, RankingDataChangedEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
 	static AppDatabase database;
@@ -42,7 +45,8 @@ public abstract class AppDatabase extends RoomDatabase {
 	public static AppDatabase getDatabase() {
 
 		if (database == null) {
-			database = Room.databaseBuilder(RankingAppContext.getAppContext(), AppDatabase.class, DATABASE_NAME).build();
+			database = Room.databaseBuilder(RankingAppContext.getAppContext(),
+					AppDatabase.class, DATABASE_NAME).build();
 		}
 
 		return database;

@@ -2,19 +2,13 @@ package haur.haurrankingandroid.domain;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)

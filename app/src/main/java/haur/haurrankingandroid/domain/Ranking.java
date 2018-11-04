@@ -3,17 +3,13 @@ package haur.haurrankingandroid.domain;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.Relation;
 import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import haur.haurrankingandroid.data.dao.TypeConverters.DateConverter;
 
 /**
  * Created by Jarno on 14.10.2018.
@@ -28,7 +24,6 @@ public class Ranking {
 	@Ignore
 	private List<DivisionRanking> divisionRankings = new ArrayList<DivisionRanking>();
 
-	@TypeConverters(DateConverter.class)
 	private Date date;
 
 	@Ignore

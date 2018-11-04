@@ -8,9 +8,6 @@ import android.arch.persistence.room.TypeConverters;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import haur.haurrankingandroid.data.dao.TypeConverters.ClassifierConverter;
-import haur.haurrankingandroid.data.dao.TypeConverters.DivisionConverter;
-
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScoreCard implements Comparable<ScoreCard> {
@@ -22,10 +19,8 @@ public class ScoreCard implements Comparable<ScoreCard> {
 
 	private Long competitorId;
 
-	@TypeConverters(ClassifierConverter.class)
 	private Classifier classifier;
 
-	@TypeConverters({ DivisionConverter.class })
 	private Division division;
 
 

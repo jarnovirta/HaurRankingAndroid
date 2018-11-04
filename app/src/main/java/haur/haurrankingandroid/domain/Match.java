@@ -4,15 +4,12 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import haur.haurrankingandroid.data.dao.TypeConverters.DateConverter;
 
 @Entity(tableName = "IpscMatch")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,7 +26,6 @@ public class Match {
 
 	@JsonProperty("match_date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@TypeConverters({DateConverter.class})
 	private Date date;
 
 	@JsonProperty("match_stages")
