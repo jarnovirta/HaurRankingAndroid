@@ -117,8 +117,6 @@ public class CompetitorsTabFragment extends ListFragment
 				}
 				CompetitorService.deleteAll(ids);
 				viewModel.update();
-				RankingService.generateRanking();
-
 				break;
 		}
 		return true;

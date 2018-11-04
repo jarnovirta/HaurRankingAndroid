@@ -68,7 +68,6 @@ public class MatchesTabFragment extends ListFragment
 		getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.d("TEST", "LONG CLICK");
 				if (!actionMode) {
 					MatchListItem item = matchList.get(position);
 					item.setSelected(true);
@@ -112,8 +111,6 @@ public class MatchesTabFragment extends ListFragment
 				}
 				MatchService.deleteAll(ids);
 				viewModel.update();
-				Log.d("TEST", "CALLING GENERATE RANKING");
-				RankingService.generateRanking();
 				break;
 		}
 		return true;

@@ -16,6 +16,7 @@ import haur.haurrankingandroid.domain.Division;
 import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Ranking;
+import haur.haurrankingandroid.domain.RankingDataChangedEntity;
 import haur.haurrankingandroid.domain.ScoreCard;
 import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRankingPostExecuteHandler;
 
@@ -26,13 +27,19 @@ import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRanking
 public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 	private GenerateRankingPostExecuteHandler handler;
+	private Ranking oldRanking;
+	private AppDatabase db;
 
 	public GenerateRankingTask(GenerateRankingPostExecuteHandler handler) {
-
 		this.handler = handler;
+		db = AppDatabase.getDatabase();
 	}
 	@Override
 	protected Ranking doInBackground(Void... args) {
+		RankingDataChangedEntity dataChanged = db.rankingDao().getRankingDataChanged();
+		if (dataChanged != null && dataChanged.isDataChanged()) {
+			oldRanking = db.rankingDao().getRanking();
+		}
 		Ranking ranking = new Ranking();
 		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
 
@@ -40,12 +47,11 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			DivisionRanking divRank = generateDivisionRanking(division);
 			if (divRank != null) ranking.getDivisionRankings().add(divRank);
 		}
+		ranking.setTotalCompetitorsAndResultsCounts();
 		return ranking;
 	}
 
 	private DivisionRanking generateDivisionRanking(Division division) {
-
-		AppDatabase db = AppDatabase.getDatabase();
 
 		// Get classifiers with min. 2 results
 		List<Classifier> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
@@ -94,15 +100,14 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		List<DivisionRankingRow> rows = generateRows(competitorRelativeResultsAverages, division,
 				validClassifiers);
 		if (rows.size() > 0) return new DivisionRanking(division,
-				generateRows(competitorRelativeResultsAverages, division, validClassifiers));
+				generateRows(competitorRelativeResultsAverages, division, validClassifiers),
+				validClassifiers);
 
 		else return null;
 	}
 
-
 	private List<DivisionRankingRow> generateRows(Map<Competitor, Double> competitorResultAveragesMap,
 	                                              Division division, List<Classifier> validClassifiers) {
-		AppDatabase db = AppDatabase.getDatabase();
 		List<DivisionRankingRow> rows = new ArrayList<>();
 		for (Competitor comp : competitorResultAveragesMap.keySet()) {
 			Double hfAverage = db.scoreCardDao().getCompetitorLatestHfAverage(comp.getId(), division,
@@ -121,13 +126,39 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 					}
 				}
 		}
+		setImprovedRanks(division, rows);
 		return rows;
 	}
 
+	private void setImprovedRanks(Division division, List<DivisionRankingRow> rows) {
+		if (oldRanking == null) return;
+		DivisionRanking oldDivisionRanking = null;
+		for (DivisionRanking divRanking : oldRanking.getDivisionRankings()) {
+			if (divRanking.getDivision().equals(division)) {
+				oldDivisionRanking = divRanking;
+				break;
+			}
+		}
+		if (oldDivisionRanking != null) {
+			for (DivisionRankingRow row : rows) {
+				for (DivisionRankingRow oldRow : oldDivisionRanking.getRows()) {
+					if (row.getCompetitor().equals(oldRow.getCompetitor())) {
+						if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
+							row.setImprovedResult(true);
+							Log.i("TEST", "IMPROVED result for " + row.getCompetitor().getLastName());
+						}
+						else {
+							row.setImprovedResult(false);
+							Log.i("TEST", "NOT IMPROVED result for " + row.getCompetitor().getLastName());
+						}
+					}
+				}
+			}
+		}
+	}
 	@Override
 	protected void onPostExecute(Ranking ranking) {
 		if (handler != null) {
-			Log.d("TEST", "TASK POST EXECUTE");
 			handler.process(ranking);
 		}
 	}

@@ -6,12 +6,11 @@ import android.util.Log;
 
 import java.util.List;
 
-import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.service.task.GenerateRankingTask;
+import haur.haurrankingandroid.service.task.SaveExportedRankingTask;
 import haur.haurrankingandroid.service.task.SaveMatchTask;
-import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRankingPostExecuteHandler;
 import haur.haurrankingandroid.service.task.onPostExecuteHandler.SaveMatchTaskResponseHandler;
 import haur.haurrankingandroid.service.test.TestDataGenerator;
 
@@ -29,7 +28,7 @@ public class RankingService {
 		Log.d("TEST", "\n Generating ranking data");
 		List<Match> matches = TestDataGenerator.generateTestData();
 
-//		new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
+		new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
 
 	}
 
@@ -50,10 +49,12 @@ public class RankingService {
 	}
 
 	public static void generateRanking() {
-
 		new GenerateRankingTask(newRanking -> {
-				Log.i("TEST", "SETTING NEW RANKING VALUE");
 				ranking.postValue(newRanking);
 		}).execute();
+	}
+
+	public static void saveExportedRanking(Ranking ranking) {
+		new SaveExportedRankingTask().execute(ranking);
 	}
 }

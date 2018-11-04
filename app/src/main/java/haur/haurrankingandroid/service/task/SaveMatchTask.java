@@ -44,6 +44,7 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 				if (match.getScoreCards() != null && match.getScoreCards().size() > 0) {
 					saveScoreCards(match);
 				}
+				db.rankingDao().setRankingDataChanged(true);
 			}
 		}
 		catch (Exception e) {
@@ -66,10 +67,8 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 		for (ScoreCard card : match.getScoreCards()) {
 			card.setCompetitorId(card.getCompetitor().getId());
 			card.setMatchId(match.getId());
-			// Delete old ScoreCard for the same competitor and classifier
-			db.scoreCardDao().deleteOldScoreCard(card.getCompetitorId(), card.getClassifier());
 		}
-		db.scoreCardDao().insertAll(match.getScoreCards());
+		db.scoreCardDao().insertAll(match.getScoreCards(), match.getDate());
 	}
 	private void saveCompetitors(List<Competitor> competitors, Long matchId) {
 		AppDatabase db = AppDatabase.getDatabase();

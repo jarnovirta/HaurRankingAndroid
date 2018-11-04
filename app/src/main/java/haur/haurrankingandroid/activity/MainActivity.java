@@ -1,14 +1,12 @@
 package haur.haurrankingandroid.activity;
 
 import android.Manifest;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -41,7 +39,8 @@ import haur.haurrankingandroid.util.DataFormatUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private final int PERMISSIONS_REQUEST_READ_AND_WRITE_SDK = 1;
-	private final int CHOOSE_EXPORT_FOLDER_REQUEST_CODE = 1;
+	private final int EXPORT_RANKING_REQUEST_CODE = 1;
+	private Ranking exportRanking = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,12 +137,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					@Override
 					public void onChanged(@Nullable Ranking ranking) {
 						if (ranking != null) {
+							exportRanking = ranking;
 							Intent intent = new Intent(Intent.ACTION_VIEW);
 							intent.setDataAndType(PdfGenerator.generatePdf(ranking, null),"application/pdf");
 							intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 							try {
-								startActivity(Intent.createChooser(intent, "Avaa PDF"));
+								startActivityForResult(Intent.createChooser(intent, "Avaa PDF"),
+										EXPORT_RANKING_REQUEST_CODE);
 							}
 							catch (ActivityNotFoundException e) {
 								String message = "Laitteella ei ole PDF-ohjelmaa";
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					@Override
 					public void onChanged(@Nullable Ranking ranking) {
 						if (ranking != null) {
+							exportRanking = ranking;
 							Intent intent = new Intent(Intent.ACTION_SEND);
 							intent.setType(".pdf -> application/pdf");
 							Uri uri = PdfGenerator.generatePdf(ranking, null);
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 							String subject = "Haur Ranking " + DataFormatUtils.dateToString(new Date());
 							intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 							try {
-								startActivity(Intent.createChooser(intent, "Lähetä sähköposti..."));
+								startActivityForResult(Intent.createChooser(intent, "Lähetä sähköposti..."), EXPORT_RANKING_REQUEST_CODE);
 							} catch (ActivityNotFoundException e) {
 								String message = "Laitteella ei ole sähköpostiohjelmaa";
 								Toast toast = Toast.makeText(RankingAppContext.getAppContext(),
@@ -200,8 +202,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == CHOOSE_EXPORT_FOLDER_REQUEST_CODE) {
-			Log.d("TEST", "*** DIRECOTYR " + data.getData());
+		if (requestCode == EXPORT_RANKING_REQUEST_CODE) {
+
+			RankingService.saveExportedRanking(exportRanking);
 		}
 	}
 }

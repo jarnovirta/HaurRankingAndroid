@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.service.ranking.RankingService;
 
 /**
  * Created by Jarno on 25.10.2018.
@@ -24,7 +25,13 @@ public class DeleteCompetitorsTask extends AsyncTask<Void, Void, Void> {
 			db.scoreCardDao().deleteByCompetitor(id);
 			db.competitorDao().delete(id);
 		}
+		db.rankingDao().setRankingDataChanged(true);
 		return null;
 	}
 
+	@Override
+	protected void onPostExecute(Void aVoid) {
+		super.onPostExecute(aVoid);
+		RankingService.generateRanking();
+	}
 }

@@ -1,20 +1,54 @@
 package haur.haurrankingandroid.domain;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 /**
  * Created by Jarno on 14.10.2018.
  */
 
+@Entity(foreignKeys = @ForeignKey(entity = DivisionRanking.class,
+		parentColumns = "id",
+		childColumns = "divisionRankingId",
+		onDelete = CASCADE))
 public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
+	@PrimaryKey(autoGenerate = true)
+	private Long id;
+
+	private Long divisionRankingId;
+
+	private int rank;
+
+	@Ignore
 	private Competitor competitor;
+
+	private Long competitorId;
+
+	@Ignore
 	private Double resultPercentage;
+
+	@Ignore
 	private Double bestResultsAverage;
+
+	@Ignore
 	private Double hitFactorAverage;
+
 	private boolean rankedCompetitor;
+
+	@Ignore
 	private int resultsCount;
 
+	@Ignore
 	private Integer previousRank;
 
+	@Ignore
 	private boolean improvedResult = false;
+
+	public DivisionRankingRow() {}
 
 	public DivisionRankingRow(Competitor competitor, Double bestResultsAverage,
 	                          Double hitFactorAverage, int resultsCount) {
@@ -52,12 +86,45 @@ public class DivisionRankingRow implements Comparable<DivisionRankingRow> {
 			return lastNameResult;
 		return other.getCompetitor().getFirstName().compareTo(this.getCompetitor().getLastName());
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getDivisionRankingId() {
+		return divisionRankingId;
+	}
+
+	public void setDivisionRankingId(Long divisionRankingId) {
+		this.divisionRankingId = divisionRankingId;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 	public Competitor getCompetitor() {
 		return competitor;
 	}
 
 	public void setCompetitor(Competitor competitor) {
 		this.competitor = competitor;
+	}
+
+	public Long getCompetitorId() {
+		return competitorId;
+	}
+
+	public void setCompetitorId(Long competitorId) {
+		this.competitorId = competitorId;
 	}
 
 	public Double getResultPercentage() {

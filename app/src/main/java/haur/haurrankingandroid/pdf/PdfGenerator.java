@@ -57,7 +57,7 @@ public class PdfGenerator {
 			doc = new Document(PageSize.A4, 50, 50, 90, 120);
 
 			PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(file.getAbsoluteFile()));
-			Footer footer = new Footer(DataFormatUtils.dateToString(new Date(ranking.getDate().getTimeInMillis())),
+			Footer footer = new Footer(DataFormatUtils.dateToString(ranking.getDate()),
 					ranking.getTotalResultsCount(), ranking.getCompetitorsWithRank(),
 					ranking.getValidClassifiersCount());
 			pdfWriter.setPageEvent(footer);

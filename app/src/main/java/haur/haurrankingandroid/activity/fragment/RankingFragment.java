@@ -2,7 +2,6 @@ package haur.haurrankingandroid.activity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,13 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,17 +101,18 @@ public class RankingFragment extends ListFragment {
 	}
 	public void setRanking(Ranking newRanking) {
 		ranking = newRanking;
-		if (ranking.getDivisionRankings() != null && ranking.getDivisionRankings().size() > 0) {
-			setCurrentDivision(0);
-		}
+		setCurrentDivision(0);
+
 	}
 
 	private void setCurrentDivision(int divisionIndex) {
-		currentDivisionRanking = ranking.getDivisionRankings().get(divisionIndex);
-		if (currentDivisionRanking.getRows() != null) {
-			currentRows.clear();
-			for (DivisionRankingRow row : currentDivisionRanking.getRows()) {
-				if (row.isRankedCompetitor()) currentRows.add(row);
+		currentRows.clear();
+		if (ranking.getDivisionRankings() != null && ranking.getDivisionRankings().size() > 0) {
+			currentDivisionRanking = ranking.getDivisionRankings().get(divisionIndex);
+			if (currentDivisionRanking.getRows() != null) {
+				for (DivisionRankingRow row : currentDivisionRanking.getRows()) {
+					if (row.isRankedCompetitor()) currentRows.add(row);
+				}
 			}
 		}
 	}
