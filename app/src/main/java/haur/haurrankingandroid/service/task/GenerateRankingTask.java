@@ -112,7 +112,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		for (Competitor comp : competitorResultAveragesMap.keySet()) {
 			Double hfAverage = db.scoreCardDao().getCompetitorLatestHfAverage(comp.getId(), division,
 					validClassifiers);
-			int resultCount = db.scoreCardDao().getCountByCompetitor(comp.getId(), division);
+			int resultCount = db.scoreCardDao().getCountByCompetitor(comp.getId(), division, validClassifiers);
 			rows.add(new DivisionRankingRow(comp, competitorResultAveragesMap.get(comp),
 					hfAverage, resultCount));
 		}

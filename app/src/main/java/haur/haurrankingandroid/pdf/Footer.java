@@ -33,9 +33,9 @@ public class Footer extends PdfPageEventHelper {
 		String thirdLine;
 		if (document.getPageNumber() == 1) {
 			String firstLine = "* Tulokset huomioitu " + rankingDateString + " saakka. Ranking-sija "
-					+ competitorsWithRank + " henkil�ll�. Sijaa parantaneet lihavoituina.";
-			String secondLine = "   Huomioituja luokitteluohjelmia " + validClassifiers + " (v�h. 2 tulosta/ohjelma)"
-					+ ", joissa yhteens� " + totalResultsCount + " tulosta.";
+					+ competitorsWithRank + " henkilöllä. Sijaa parantaneet lihavoituina.";
+			String secondLine = "   Huomioituja luokitteluohjelmia " + validClassifiers + " (väh. 2 tulosta/ohjelma)"
+					+ ", joissa yhteensä " + totalResultsCount + " tulosta.";
 
 			lines.add(new Phrase(firstLine, footerFont));
 			lines.add(new Phrase(secondLine, footerFont));
@@ -43,7 +43,7 @@ public class Footer extends PdfPageEventHelper {
 		} else
 			thirdLine = "*";
 		if (showFooterOnPage) {
-			thirdLine += " V�hint��n 4 tulosta vaaditaan sijoitukseen ja 8 viimeisint� huomioidaan.";
+			thirdLine += " Vähintään 4 tulosta vaaditaan sijoitukseen ja 8 viimeisintä huomioidaan.";
 			lines.add(new Phrase(thirdLine, footerFont));
 			showFooterOnPage = false;
 		}

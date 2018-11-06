@@ -40,9 +40,6 @@ public abstract class ScoreCardDao {
 	abstract List<ScoreCard> findExistingScoreCards(Long competitorId, Classifier classifier,
 	                                                 Division division);
 
-	@Query("SELECT * FROM ScoreCard")
-	public abstract List<ScoreCard> findAll();
-
 	// Find ScoreCards for Classifiers with min. 2 results in Division.
 	@Query("SELECT classifier FROM (SELECT classifier, COUNT(id) AS id_count " +
 			"FROM ScoreCard " +
@@ -63,7 +60,8 @@ public abstract class ScoreCardDao {
 			"AND sc.classifier IN (:classifiers)" +
 			"ORDER BY m.date DESC " +
 			"LIMIT 8")
-	public abstract List<ScoreCard> getForRanking(Division division, Long competitorId, List<Classifier> classifiers);
+	public abstract List<ScoreCard> getForRanking(Division division, Long competitorId,
+	                                              List<Classifier> classifiers);
 
 	@Query("SELECT AVG(hf) FROM (SELECT hitfactor AS hf FROM ScoreCard sc "
 			+ "INNER JOIN ipscmatch m ON sc.matchId = m.id "
@@ -71,11 +69,14 @@ public abstract class ScoreCardDao {
 			+ "AND sc.division = :division "
 			+ "AND sc.classifier IN (:validClassifiers) "
 			+ "ORDER BY m.date DESC LIMIT 8)")
-	public abstract Double getCompetitorLatestHfAverage(Long competitorId, Division division, List<Classifier> validClassifiers);
+	public abstract Double getCompetitorLatestHfAverage(Long competitorId, Division division,
+	                                                    List<Classifier> validClassifiers);
 
 	@Query("SELECT COUNT(id) FROM ScoreCard WHERE competitorId = :competitorId " +
-			"AND division = :division")
-	public abstract int getCountByCompetitor(Long competitorId, Division division);
+			"AND division = :division " +
+			"AND classifier IN (:validClassifiers)")
+	public abstract int getCountByCompetitor(Long competitorId, Division division,
+	                                         List<Classifier> validClassifiers);
 
 	@Query("SELECT DISTINCT(division) FROM ScoreCard")
 	public abstract List<Division> findAllDivisions();

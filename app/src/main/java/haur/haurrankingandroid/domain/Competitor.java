@@ -59,9 +59,9 @@ public class Competitor implements Comparable<Competitor> {
 
 	@Override
 	public int compareTo(@NonNull Competitor other) {
-		int result = this.lastName.compareTo(other.getLastName());
+		int result = this.lastName.toLowerCase().compareTo(other.getLastName().toLowerCase());
 		if (result != 0) return result;
-		return this.firstName.compareTo(other.getFirstName());
+		return this.firstName.toLowerCase().compareTo(other.getFirstName().toLowerCase());
 	}
 
 	public Long getId() {
