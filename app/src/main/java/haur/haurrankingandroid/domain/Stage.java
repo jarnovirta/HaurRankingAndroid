@@ -1,7 +1,5 @@
 package haur.haurrankingandroid.domain;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,6 +42,8 @@ public class Stage {
 
 	@JsonProperty("stage_classifiercode")
 	private String classifierCode;
+
+	private int minRounds;
 
 	public Long getId() {
 		return id;
@@ -99,7 +99,7 @@ public class Stage {
 
 	public void setTargets(Target[] targets) {
 		this.targets = targets;
-		setMaxPoints();
+		setRoundCountAndMaxPoints();
 	}
 
 	public int getPoppers() {
@@ -108,21 +108,24 @@ public class Stage {
 
 	public void setPoppers(int poppers) {
 		this.poppers = poppers;
-		setMaxPoints();
+		setRoundCountAndMaxPoints();
 	}
 
 	public int getMaxPoints() {
 		return maxPoints;
 	}
 
-	public void setMaxPoints() {
+	public void setRoundCountAndMaxPoints() {
 		this.maxPoints = 0;
-		if (this.targets != null && this.targets.length > 0) {
-			for (Target target : this.targets) {
-				this.maxPoints += target.getRequiredShots() * 5;
+		minRounds = poppers;
+		if (targets != null && targets.length > 0) {
+			for (Target target : targets) {
+				maxPoints += target.getRequiredShots() * 5;
+				minRounds += target.getRequiredShots();
 			}
 		}
-		this.maxPoints += poppers * 5;
+		maxPoints += poppers * 5;
+
 	}
 
 	public boolean isDeleted() {
@@ -133,7 +136,7 @@ public class Stage {
 		this.deleted = deleted;
 	}
 
-	public void setMaxPoints(int maxPoints) {
+	public void setRoundCountAndMaxPoints(int maxPoints) {
 		this.maxPoints = maxPoints;
 	}
 
@@ -151,5 +154,9 @@ public class Stage {
 
 	public void setClassifierCode(String classifierCode) {
 		this.classifierCode = classifierCode;
+	}
+
+	public int getMinRounds() {
+		return minRounds;
 	}
 }

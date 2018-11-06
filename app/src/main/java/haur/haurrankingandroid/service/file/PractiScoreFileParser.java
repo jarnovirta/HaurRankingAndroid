@@ -25,9 +25,9 @@ public class PractiScoreFileParser {
 	private static final String TAG = PractiScoreFileParser.class.getSimpleName();
 	public static Match readMatchDefDataFromExportFile(File file) {
 		try {
-			String jason = readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
+			String json = readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
 			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(jason, new TypeReference<Match>() {
+			return objectMapper.readValue(json, new TypeReference<Match>() {
 			});
 		}
 		catch (Exception e) {
@@ -37,9 +37,9 @@ public class PractiScoreFileParser {
 	}
 	public static MatchScore readMatchResultDataFromExportFile(File file) {
 		try {
-			String jason = readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_SCORES);
+			String json = readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_SCORES);
 			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(jason, new TypeReference<MatchScore>() {
+			return objectMapper.readValue(json, new TypeReference<MatchScore>() {
 			});
 		}
 		catch (Exception e) {

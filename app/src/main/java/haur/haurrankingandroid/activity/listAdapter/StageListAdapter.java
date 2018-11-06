@@ -12,13 +12,17 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.domain.Classifier;
+import haur.haurrankingandroid.domain.ClassifierSetup;
+import haur.haurrankingandroid.domain.ClassifierSetupObject;
 import haur.haurrankingandroid.domain.StageListItem;
+import haur.haurrankingandroid.service.classifier.ClassifierSetupInfoService;
 
 /**
  * Created by Jarno on 25.10.2018.
@@ -69,12 +73,14 @@ public class StageListAdapter extends ArrayAdapter<StageListItem> {
 				item.setSelected(((CheckBox) v).isChecked());
 			}
 		});
+
+		List<Classifier> classifierOptions = getClassifierOptions(item);
 		ArrayAdapter<Classifier> spinnerAdapter = new ArrayAdapter<>(getContext(),
-				android.R.layout.simple_spinner_item, Classifier.values());
+				android.R.layout.simple_spinner_item, classifierOptions);
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		viewHolder.classifierSpinner.setAdapter(spinnerAdapter);
 		if (item.getClassifier() != null) {
-			viewHolder.classifierSpinner.setSelection(Arrays.asList(Classifier.values()).indexOf(item.getClassifier()));
+			viewHolder.classifierSpinner.setSelection(classifierOptions.indexOf(item.getClassifier()));
 		}
 
 		viewHolder.classifierSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -89,5 +95,20 @@ public class StageListAdapter extends ArrayAdapter<StageListItem> {
 			}
 		});
 		return recycledView;
+	}
+
+	// Returns a list of classifiers corresponding to min rounds count and target count of
+	// the stage in the classifiersSpinner list.
+	private List<Classifier> getClassifierOptions(final StageListItem item) {
+		ClassifierSetupObject classifierSetupData = ClassifierSetupInfoService.getClassifierSetupObject();
+		List<Classifier> classifierOptions = new ArrayList<>();
+		for (ClassifierSetup classifierSetup : classifierSetupData.getClassifierSetups()) {
+			if (classifierSetup.getMinRounds() == item.getStage().getMinRounds()
+					&& classifierSetup.getPaperTargets() == item.getStage().getTargets().length
+			&& classifierSetup.getSteelTargets() == item.getStage().getPoppers()) {
+				classifierOptions.add(classifierSetup.getClassifier());
+			}
+		}
+		return classifierOptions;
 	}
 }

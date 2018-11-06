@@ -24,7 +24,7 @@ public interface CompetitorDao {
 	@Query("SELECT * FROM competitor WHERE id IN (:ids)")
 	List<Competitor> find(Set<Long> ids);
 
-	@Query("SELECT * FROM competitor WHERE firstName = :firstName AND lastName = :lastName")
+	@Query("SELECT * FROM competitor WHERE firstName LIKE :firstName AND lastName LIKE :lastName")
 	Competitor findByName(String firstName, String lastName);
 
 	@Query("SELECT * FROM competitor WHERE id IN " +

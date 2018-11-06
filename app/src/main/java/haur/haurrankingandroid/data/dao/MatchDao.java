@@ -23,7 +23,7 @@ public interface MatchDao {
 	@Query("SELECT * FROM ipscmatch WHERE id IN (:ids)")
 	List<Match> find(List<Long> ids);
 
-	@Query("SELECT * FROM ipscmatch")
+	@Query("SELECT * FROM ipscmatch ORDER BY date DESC")
 	List<Match> findAll();
 
 	@Query("SELECT COUNT(id) FROM ipscmatch")

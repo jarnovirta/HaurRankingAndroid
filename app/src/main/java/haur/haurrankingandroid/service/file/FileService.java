@@ -4,13 +4,17 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import haur.haurrankingandroid.RankingAppContext;
+import haur.haurrankingandroid.domain.ClassifierSetupObject;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchScore;
 
@@ -72,6 +76,29 @@ public class FileService {
 
 		}
 		catch (IOException e) {
-			Log.e(TAG, e.getStackTrace().toString());		}
+			Log.e(TAG, e.getMessage(), e);		}
+	}
+
+	public static ClassifierSetupObject readClassifierSetupData() {
+		try {
+			InputStream is = RankingAppContext.getAppContext().getAssets().open("classifier_stage_setup.json");
+			BufferedReader r = new BufferedReader(new InputStreamReader(is));
+			StringBuilder json = new StringBuilder();
+			for (String line; (line = r.readLine()) != null; ) {
+				json.append(line).append('\n');
+			}
+			Log.i("TEST", "JSON: " + json);
+			r.close();
+			is.close();
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.readValue(json.toString(), new TypeReference<ClassifierSetupObject>() {
+			});
+
+		}
+		catch(IOException e) {
+			Log.e(TAG, "Error reading classifier_stage_setup.json", e);
+		}
+		return null;
 	}
 }

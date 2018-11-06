@@ -1,0 +1,6 @@
+- Muuta kanta niin että tulostietoja ei poisteta. Koska muuten jos tallentaa kisan ja poistaa
+sen, vanhat tiedot ovat hävinneet.
+- Lisää ranking-sijojen vertailu
+- Tee ohje
+- Korjaa rankingiin tulokset huomioitu päivä viittaamaan viimeiseen kisan päivään (jos ei jo ole)
+- Tee laukausmäärien tarkastus tulosten tuontiin
