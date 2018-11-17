@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.List;
@@ -20,12 +21,14 @@ public abstract class ScoreCardDao {
 
 	public void insertAll(List<ScoreCard> scoreCards, Date matchDate) {
 		// Remove older results before inserting card
-		for (ScoreCard card :scoreCards) {
+		for (ScoreCard card : scoreCards) {
 			deleteOldScoreCards(card.getCompetitorId(), card.getClassifier(),
 					card.getDivision(), matchDate);
 			List<ScoreCard> existingCards = findExistingScoreCards(card.getCompetitorId(),
 					card.getClassifier(), card.getDivision());
+			Log.i("Test", "Existing cards size after delete for " + card.getClassifier() + " " + card.getCompetitor().getLastName() + " " + existingCards.size());
 			if (existingCards.size() == 0) {
+				Log.i("Test", "Inserting card");
 				insert(card);
 			}
 		}

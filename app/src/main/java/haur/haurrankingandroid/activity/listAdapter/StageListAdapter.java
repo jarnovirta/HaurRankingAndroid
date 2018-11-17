@@ -80,13 +80,15 @@ public class StageListAdapter extends ArrayAdapter<StageListItem> {
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		viewHolder.classifierSpinner.setAdapter(spinnerAdapter);
 		if (item.getClassifier() != null) {
-			viewHolder.classifierSpinner.setSelection(classifierOptions.indexOf(item.getClassifier()));
+			viewHolder.classifierSpinner.setSelection(classifierOptions.indexOf(item.getClassifier()), false);
+			Log.i("ADAPTER", "Adapter setting classifier spinner to " + item.getClassifier());
 		}
 
 		viewHolder.classifierSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				item.setClassifier(Arrays.asList(Classifier.values()).get(position));
+				item.setClassifier(classifierOptions.get(position));
+				Log.i("ADAPTER", "CHANGED CLASSIFIER TO " + item.getClassifier() + " FOR " + item.getStage().getName());
 			}
 
 			@Override
@@ -94,6 +96,10 @@ public class StageListAdapter extends ArrayAdapter<StageListItem> {
 
 			}
 		});
+
+
+
+
 		return recycledView;
 	}
 

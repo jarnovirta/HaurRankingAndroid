@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 							String subject = "Haur Ranking " + DataFormatUtils.dateToString(new Date());
 							intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 							try {
-								startActivityForResult(Intent.createChooser(intent, "Lähetä sähköposti..."), EXPORT_RANKING_REQUEST_CODE);
+								startActivityForResult(Intent.createChooser(intent, "Jaa ranking..."), EXPORT_RANKING_REQUEST_CODE);
 							} catch (ActivityNotFoundException e) {
 								String message = "Laitteella ei ole sähköpostiohjelmaa";
 								Toast toast = Toast.makeText(RankingAppContext.getAppContext(),

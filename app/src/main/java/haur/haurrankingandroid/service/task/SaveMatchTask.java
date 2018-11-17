@@ -38,7 +38,7 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 				}
 				else match.setId(oldMatch.getId());
 				if (match.getCompetitors() != null && match.getCompetitors().size() > 0) {
-					saveCompetitors(match.getCompetitors(), match.getId());
+					saveCompetitors(match.getCompetitors());
 				}
 
 				if (match.getScoreCards() != null && match.getScoreCards().size() > 0) {
@@ -65,12 +65,14 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 	private void saveScoreCards(Match match) {
 		AppDatabase db = AppDatabase.getDatabase();
 		for (ScoreCard card : match.getScoreCards()) {
+			Log.i("TEST", "Saving card for stage " + card.getClassifier() + " for competitor " + card.getCompetitor().getLastName());
 			card.setCompetitorId(card.getCompetitor().getId());
 			card.setMatchId(match.getId());
 		}
+		Log.i("TEST", "Inserting " + match.getScoreCards().size() + " cards");
 		db.scoreCardDao().insertAll(match.getScoreCards(), match.getDate());
 	}
-	private void saveCompetitors(List<Competitor> competitors, Long matchId) {
+	private void saveCompetitors(List<Competitor> competitors) {
 		AppDatabase db = AppDatabase.getDatabase();
 
 		for (Competitor comp : competitors) {

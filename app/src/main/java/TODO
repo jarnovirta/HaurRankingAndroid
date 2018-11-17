@@ -3,4 +3,5 @@ sen, vanhat tiedot ovat hävinneet.
 - Lisää ranking-sijojen vertailu
 - Tee ohje
 - Korjaa rankingiin tulokset huomioitu päivä viittaamaan viimeiseen kisan päivään (jos ei jo ole)
-- Tee laukausmäärien tarkastus tulosten tuontiin
+- Korjaa tiedostojen luku/kirjoitusoikeuden aiheuttama kaatuminen ekalla käynnistyksellä.
+- Lisää vielä seulontaan sen tarkistus, onko practiscoren puolella ylipäätään noshootteja.

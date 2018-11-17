@@ -67,6 +67,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		// Competitors with results in valid classifiers
 		List<Competitor> competitors = db.competitorDao().getCompetitorsWithResults(division, validClassifiers);
 
+		Log.i("TEST", "Competitors with valid results count " + competitors.size());
 		Map<Competitor, Double> competitorRelativeResultsAverages = new HashMap<>();
 
 		for (Competitor comp : competitors) {
