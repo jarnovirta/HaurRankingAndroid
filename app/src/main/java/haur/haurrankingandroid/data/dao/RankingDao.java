@@ -7,6 +7,8 @@ import android.arch.persistence.room.Transaction;
 
 import java.util.List;
 
+import haur.haurrankingandroid.data.AppDatabase;
+import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.DivisionRanking;
 import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Ranking;
@@ -22,13 +24,21 @@ public abstract class RankingDao {
 		Ranking ranking = getRankingEntity();
 		if (ranking != null) {
 			ranking.setDivisionRankings(getDivisionRankings(ranking.getId()));
+			List<Competitor> competitors = AppDatabase.getDatabase().competitorDao().findAll();
 			for (DivisionRanking divRanking : ranking.getDivisionRankings()) {
 				divRanking.setRows(getDivisionRankingRows(divRanking.getId()));
+				for (DivisionRankingRow row : divRanking.getRows()) {
+					row.setCompetitor(getCompetitorFromList(competitors, row.getCompetitorId()));
+				}
 			}
 		}
 		return ranking;
 	}
 
+	private Competitor getCompetitorFromList(List<Competitor> comps, Long id) {
+		for (Competitor comp : comps) if (comp.getId().equals(id)) return comp;
+		return null;
+	}
 	@Transaction
 	public void saveRanking(Ranking ranking) {
 		Long rankingId = insertRanking(ranking);

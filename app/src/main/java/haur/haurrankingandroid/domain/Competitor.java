@@ -64,6 +64,15 @@ public class Competitor implements Comparable<Competitor> {
 		return this.firstName.toLowerCase().compareTo(other.getFirstName().toLowerCase());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Competitor)) return false;
+		Competitor other = (Competitor) obj;
+		if (this.firstName.toLowerCase().equals(other.getFirstName().toLowerCase())
+				&& this.lastName.toLowerCase().equals(other.getLastName().toLowerCase())) return true;
+		return false;
+	}
+
 	public Long getId() {
 		return id;
 	}

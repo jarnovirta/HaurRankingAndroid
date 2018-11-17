@@ -38,7 +38,9 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	protected Ranking doInBackground(Void... args) {
 		RankingDataChangedEntity dataChanged = db.rankingDao().getRankingDataChanged();
 		if (dataChanged != null && dataChanged.isDataChanged()) {
+			Log.i("TEST", "RANKING DATA CHANGED, loading ranking");
 			oldRanking = db.rankingDao().getRanking();
+			Log.i("TEST", "Old ranking null " + (oldRanking == null));
 		}
 		Ranking ranking = new Ranking();
 		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
@@ -66,8 +68,6 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 		// Competitors with results in valid classifiers
 		List<Competitor> competitors = db.competitorDao().getCompetitorsWithResults(division, validClassifiers);
-
-		Log.i("TEST", "Competitors with valid results count " + competitors.size());
 		Map<Competitor, Double> competitorRelativeResultsAverages = new HashMap<>();
 
 		for (Competitor comp : competitors) {
@@ -132,6 +132,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	}
 
 	private void setImprovedRanks(Division division, List<DivisionRankingRow> rows) {
+
 		if (oldRanking == null) return;
 		DivisionRanking oldDivisionRanking = null;
 		for (DivisionRanking divRanking : oldRanking.getDivisionRankings()) {
@@ -142,8 +143,10 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 		}
 		if (oldDivisionRanking != null) {
 			for (DivisionRankingRow row : rows) {
+				boolean foundOldRow = false;
 				for (DivisionRankingRow oldRow : oldDivisionRanking.getRows()) {
-					if (row.getCompetitor().equals(oldRow.getCompetitor())) {
+					if (row.getCompetitor().equals(oldRow.getCompetitor()) && row.isRankedCompetitor()) {
+						foundOldRow = true;
 						if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
 							row.setImprovedResult(true);
 							Log.i("TEST", "IMPROVED result for " + row.getCompetitor().getLastName());
@@ -154,6 +157,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 						}
 					}
 				}
+				if (!foundOldRow) row.setImprovedResult(true);
 			}
 		}
 	}

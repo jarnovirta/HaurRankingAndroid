@@ -2,12 +2,17 @@ package haur.haurrankingandroid.activity.fragment;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.domain.CompetitorListItem;
 import haur.haurrankingandroid.domain.MatchListItem;
+import haur.haurrankingandroid.domain.Ranking;
+import haur.haurrankingandroid.service.ranking.RankingService;
 import haur.haurrankingandroid.service.task.LoadCompetitorListTask;
 import haur.haurrankingandroid.service.task.LoadMatchListTask;
 

@@ -72,7 +72,6 @@ public class ImportFragment extends ListFragment {
 				for (ScoreCard card : match.getScoreCards()) {
 					if (card.getStagePractiScoreId().equals(item.getStage().getPractiScoreId())) {
 						card.setClassifier(item.getClassifier());
-						Log.i("Test", "Setting classifier " + card.getClassifier());
 						saveCards.add(card);
 					}
 				}

@@ -14,9 +14,7 @@ public class StageListItem {
 	public StageListItem(Stage stage) {
 		this.stage = stage;
 		if (stage != null && stage.getClassifierCode() != null && stage.getClassifierCode().length() > 0) {
-
 			classifier = Classifier.fromPractiScoreCode(stage.getClassifierCode());
-			Log.i("TEST", "STAGE ITEM constructor setting classifier to " + this.classifier);
 			selected = true;
 		}
 	}

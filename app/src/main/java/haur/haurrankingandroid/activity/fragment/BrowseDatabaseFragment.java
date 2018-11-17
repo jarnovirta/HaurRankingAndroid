@@ -1,5 +1,6 @@
 package haur.haurrankingandroid.activity.fragment;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import haur.haurrankingandroid.R;
 import haur.haurrankingandroid.domain.MatchListItem;
+import haur.haurrankingandroid.domain.Ranking;
+import haur.haurrankingandroid.service.ranking.RankingService;
 import haur.haurrankingandroid.service.task.LoadStatisticsTask;
 import haur.haurrankingandroid.service.task.onPostExecuteHandler.LoadStatisticsPostExecuteHandler;
 
@@ -38,7 +41,6 @@ public class BrowseDatabaseFragment extends Fragment {
 		viewModel.getCompetitorListItems().observe(this, newList -> {
 			updateTabTitles();
 		});
-
 	}
 
 	@Nullable
@@ -50,7 +52,12 @@ public class BrowseDatabaseFragment extends Fragment {
 				MatchesTabFragment.class, null);
 		tabHost.addTab(tabHost.newTabSpec("db_competitors_tab").setIndicator("Kilpailijat"),
 				CompetitorsTabFragment.class, null);
-
+		RankingService.getRanking().observe(this, new Observer<Ranking>() {
+			@Override
+			public void onChanged(@Nullable Ranking ranking) {
+				viewModel.update();
+			}
+		});
 		return tabHost;
 	}
 
