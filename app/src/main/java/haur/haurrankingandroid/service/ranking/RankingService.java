@@ -25,7 +25,7 @@ public class RankingService {
 
 //		TEST
 
-		List<Match> matches = TestDataGenerator.generateTestData();
+		// List<Match> matches = TestDataGenerator.generateTestData();
 
 		//new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
 

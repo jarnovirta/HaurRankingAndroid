@@ -65,11 +65,9 @@ public class SaveMatchTask extends AsyncTask<Match, Void, Void> {
 	private void saveScoreCards(Match match) {
 		AppDatabase db = AppDatabase.getDatabase();
 		for (ScoreCard card : match.getScoreCards()) {
-			Log.i("TEST", "Saving card for stage " + card.getClassifier() + " for competitor " + card.getCompetitor().getLastName());
 			card.setCompetitorId(card.getCompetitor().getId());
 			card.setMatchId(match.getId());
 		}
-		Log.i("TEST", "Inserting " + match.getScoreCards().size() + " cards");
 		db.scoreCardDao().insertAll(match.getScoreCards(), match.getDate());
 	}
 	private void saveCompetitors(List<Competitor> competitors) {

@@ -87,7 +87,6 @@ public class FileService {
 			for (String line; (line = r.readLine()) != null; ) {
 				json.append(line).append('\n');
 			}
-			Log.i("TEST", "JSON: " + json);
 			r.close();
 			is.close();
 

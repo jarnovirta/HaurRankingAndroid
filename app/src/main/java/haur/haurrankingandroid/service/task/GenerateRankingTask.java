@@ -38,9 +38,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	protected Ranking doInBackground(Void... args) {
 		RankingDataChangedEntity dataChanged = db.rankingDao().getRankingDataChanged();
 		if (dataChanged != null && dataChanged.isDataChanged()) {
-			Log.i("TEST", "RANKING DATA CHANGED, loading ranking");
 			oldRanking = db.rankingDao().getRanking();
-			Log.i("TEST", "Old ranking null " + (oldRanking == null));
 		}
 		Ranking ranking = new Ranking();
 		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
@@ -149,11 +147,9 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 						foundOldRow = true;
 						if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
 							row.setImprovedResult(true);
-							Log.i("TEST", "IMPROVED result for " + row.getCompetitor().getLastName());
 						}
 						else {
 							row.setImprovedResult(false);
-							Log.i("TEST", "NOT IMPROVED result for " + row.getCompetitor().getLastName());
 						}
 					}
 				}
