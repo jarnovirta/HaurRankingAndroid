@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private final int EXPORT_RANKING_REQUEST_CODE = 1;
 	private Ranking exportRanking = null;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 								toast.show();
 							}
 						}
+						RankingService.getRanking().removeObserver(this);
 					}
 				});
 				break;
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 								toast.show();
 							}
 						}
+						RankingService.getRanking().removeObserver(this);
 					}
 				});
 				break;
@@ -206,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXPORT_RANKING_REQUEST_CODE) {
-
 			RankingService.saveExportedRanking(exportRanking);
 		}
 	}
