@@ -33,7 +33,7 @@ public class Footer extends PdfPageEventHelper {
 		String thirdLine;
 		if (document.getPageNumber() == 1) {
 			String firstLine = "* Tulokset huomioitu " + rankingDateString + " saakka. Ranking-sija "
-					+ competitorsWithRank + " henkilöllä. Sijaa parantaneet lihavoituina.";
+					+ competitorsWithRank + " henkilöllä.";
 			String secondLine = "   Huomioituja luokitteluohjelmia " + validClassifiers + " (väh. 2 tulosta/ohjelma)"
 					+ ", joissa yhteensä " + totalResultsCount + " tulosta.";
 

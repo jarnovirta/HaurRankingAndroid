@@ -25,9 +25,7 @@ public class PractiScoreDataService {
 		Match match = (Match) FileService.readPractiScoreExportFile(uri)[0];
 		MatchScore matchScore = (MatchScore) FileService.readPractiScoreExportFile(uri)[1];
 		if (matchScore.getStageScores() != null) {
-
 			List<ScoreCard> cards = new ArrayList<>();
-
 			for (StageScore ss : matchScore.getStageScores()) {
 				Stage stage = getStage(match.getStages(), ss.getStageUuid());
 				if (stage != null && !stage.isDeleted()) {

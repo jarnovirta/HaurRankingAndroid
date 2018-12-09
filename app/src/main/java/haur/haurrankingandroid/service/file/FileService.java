@@ -1,5 +1,6 @@
 package haur.haurrankingandroid.service.file;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -9,9 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 import haur.haurrankingandroid.RankingAppContext;
 import haur.haurrankingandroid.domain.ClassifierSetupObject;
@@ -33,8 +36,29 @@ public class FileService {
 		MatchScore matchScoreData = null;
 
 		try {
-			String practiScoreExportFilePath = FileUtil.getPath(RankingAppContext.getAppContext(), uri);
-			File file = new File(practiScoreExportFilePath);
+			ContentResolver cr = RankingAppContext.getAppContext().getContentResolver();
+			InputStream is = cr.openInputStream(uri);
+			/* BufferedReader r = new BufferedReader(new InputStreamReader(is));
+			StringBuilder total = new StringBuilder();
+			for (String line; (line = r.readLine()) != null; ) {
+				total.append(line).append('\n');
+			}*/
+			InputStream inputStream = null;
+			OutputStream outputStream = null;
+
+			String externalStorageFolder = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+			outputStream = new FileOutputStream(new File(externalStorageFolder + "/HaurRanking/matchImport.temp"));
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			while ((read = is.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+			outputStream.close();
+			is.close();
+			File file = new File(externalStorageFolder + "/HaurRanking/matchImport.temp");
+			Log.i("******** TEST", "TIEDOSTO LUETTU");
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			String jsonString = PractiScoreFileParser.readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
@@ -46,12 +70,12 @@ public class FileService {
 			if (jsonString != null && jsonString.length() > 0) {
 				matchScoreData = objectMapper.readValue(jsonString, new TypeReference<MatchScore>() {
 				});
-			}
-		}
+			} 		}
 		catch (IOException e) {
 			Log.e(TAG, "Error reading PractiScore export file!", e);
 
 		}
+
 		return new Object[] { matchDef, matchScoreData};
 	}
 	public static void createDirectoriesIfNotExist() {

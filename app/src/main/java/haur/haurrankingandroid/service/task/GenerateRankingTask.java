@@ -130,7 +130,7 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	}
 
 	private void setImprovedRanks(Division division, List<DivisionRankingRow> rows) {
-
+	/* TODO: muutettava niin, että käyttäjä päättää vanhan rankingin tallennuksesta
 		if (oldRanking == null) return;
 		DivisionRanking oldDivisionRanking = null;
 		for (DivisionRanking divRanking : oldRanking.getDivisionRankings()) {
@@ -140,22 +140,41 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 			}
 		}
 		if (oldDivisionRanking != null) {
+
+
 			for (DivisionRankingRow row : rows) {
-				boolean foundOldRow = false;
-				for (DivisionRankingRow oldRow : oldDivisionRanking.getRows()) {
-					if (row.getCompetitor().equals(oldRow.getCompetitor()) && row.isRankedCompetitor()) {
-						foundOldRow = true;
-						if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
-							row.setImprovedResult(true);
-						}
-						else {
-							row.setImprovedResult(false);
+				if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
+					Log.i("TEST", "JARNON TULOKSET " + rows.indexOf(row));
+				}
+				if (row.isRankedCompetitor()) {
+					if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
+						Log.i("TEST", "IS RANKED ");
+					}
+					boolean foundOldRow = false;
+					for (DivisionRankingRow oldRow : oldDivisionRanking.getRows()) {
+						if (row.getCompetitor().equals(oldRow.getCompetitor())) {
+							if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
+								Log.i("TEST", "FOUND ROW");
+								Log.i("TEST", "new index " + rows.indexOf(row));
+								Log.i("TEST", "old index " + oldDivisionRanking.getRows().indexOf(oldRow));
+							}
+							foundOldRow = true;
+
+							if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
+								if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
+									Log.i("TEST", "IS IMPROVEd");
+
+								}
+								row.setImprovedResult(true);
+							} else {
+								row.setImprovedResult(false);
+							}
 						}
 					}
+					if (!foundOldRow) row.setImprovedResult(true);
 				}
-				if (!foundOldRow) row.setImprovedResult(true);
 			}
-		}
+		} */
 	}
 	@Override
 	protected void onPostExecute(Ranking ranking) {

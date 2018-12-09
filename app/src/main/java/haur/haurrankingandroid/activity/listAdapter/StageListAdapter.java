@@ -105,6 +105,7 @@ public class StageListAdapter extends ArrayAdapter<StageListItem> {
 	private List<Classifier> getClassifierOptions(final StageListItem item) {
 		ClassifierSetupObject classifierSetupData = ClassifierSetupInfoService.getClassifierSetupObject();
 		List<Classifier> classifierOptions = new ArrayList<>();
+		if (item.getStage().getTargets() == null) return classifierOptions;
 		for (ClassifierSetup classifierSetup : classifierSetupData.getClassifierSetups()) {
 			if (classifierSetup.getMinRounds() == item.getStage().getMinRounds()
 					&& classifierSetup.getPaperTargets() == item.getStage().getTargets().length
