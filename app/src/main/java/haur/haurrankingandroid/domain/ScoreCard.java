@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -254,8 +255,15 @@ public class ScoreCard implements Comparable<ScoreCard> {
 	}
 
 	public void setStringTimes(double[] stringTimes) {
+		Log.i("TEST", "SETSTRING CALLED");
 		if (stringTimes != null && stringTimes.length > 0) {
-			this.time = stringTimes[0];
+			Log.i("SETTING TIMES", "SETTING TIMES");
+			this.time = 0.0;
+			for (int i = 0; i < stringTimes.length; i++) {
+				Log.i("SETTING TIMES", "TIME: " + stringTimes[i]);
+				this.time += stringTimes[i];
+			}
+			Log.i("TEST", "TOTAL " + String.valueOf(this.time));
 		}
 	}
 
