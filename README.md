@@ -12,4 +12,4 @@ This is an Android Studio (IntelliJ IDEA) / Gradle project.
 
 ## Screenshots 
 
-A few screenshots of the application are included in this project, in the [screenshots directory](https://github.com/jarnovirta/HaurRankingAndroid/tree/master/screenshots).
+Screenshots of the application are included in this project, in the [screenshots directory](https://github.com/jarnovirta/HaurRankingAndroid/tree/master/screenshots).
