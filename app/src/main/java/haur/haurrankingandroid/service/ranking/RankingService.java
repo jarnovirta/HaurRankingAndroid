@@ -15,43 +15,23 @@ import haur.haurrankingandroid.service.task.onPostExecuteHandler.SaveMatchTaskRe
 import haur.haurrankingandroid.service.test.TestDataGenerator;
 
 /**
- * Created by Jarno on 14.10.2018.
+ * Created by Jarno on 14.10.2018
  */
 
 public class RankingService {
 
 	private static MutableLiveData<Ranking> ranking;
-	public static void saveTestData() {
-
-//		TEST
-
-		// List<Match> matches = TestDataGenerator.generateTestData();
-
-		//new SaveMatchTask(new SaveMatchesResponseHandler(), null).execute(matches.toArray(new Match[] { }));
-
-	}
-
-	private static class SaveMatchesResponseHandler implements SaveMatchTaskResponseHandler {
-		@Override
-		public void process() {
-			Log.d("TEST", "\n PROCESS METHOD: TEST DATA GENERATION FINISHED" +
-					"\nCALLING GENERATE RANKING...");
-		}
-	}
 
 	public static LiveData<Ranking> getRanking() {
 		if (ranking == null) {
-			ranking = new MutableLiveData<Ranking>();
+			ranking = new MutableLiveData<>();
 			generateRanking();
 		}
 		return ranking;
 	}
 
 	public static void generateRanking() {
-
-		new GenerateRankingTask(newRanking -> {
-				ranking.postValue(newRanking);
-		}).execute();
+		new GenerateRankingTask(newRanking -> ranking.postValue(newRanking)).execute();
 	}
 
 	public static void saveExportedRanking(Ranking ranking) {

@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		navigationView.setCheckedItem(R.id.nav_ranking_list);
 
 		FileService.createDirectoriesIfNotExist();
-		RankingService.saveTestData();
 		getPermissions();
 
 	}
@@ -73,35 +72,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	public void onRequestPermissionsResult(int requestCode,
 	                                       @NonNull String permissions[], @NonNull int[] grantResults) {
 		switch (requestCode) {
-			case PERMISSIONS_REQUEST_READ_AND_WRITE_SDK: {
-				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0
-						&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-				} else {
+			case PERMISSIONS_REQUEST_READ_AND_WRITE_SDK:
+				if (grantResults.length == 0
+						|| grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					finish();
 				}
-			}
+			break;
 		}
 	}
 
 	private void getPermissions() {
-		if (Build.VERSION.SDK_INT >= 23 &&
-				ContextCompat.checkSelfPermission(this,
-						Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-				ContextCompat.checkSelfPermission(this,
-						Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-			ActivityCompat.requestPermissions(this,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-							Manifest.permission.READ_EXTERNAL_STORAGE},
-					PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
+		if (Build.VERSION.SDK_INT >= 23) {
+			int writePermission = ContextCompat.checkSelfPermission(this,
+					Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			int readPermission = ContextCompat.checkSelfPermission(this,
+					Manifest.permission.READ_EXTERNAL_STORAGE);
+			if (writePermission != PackageManager.PERMISSION_GRANTED
+					|| readPermission != PackageManager.PERMISSION_GRANTED) {
+				ActivityCompat.requestPermissions(this,
+						new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE,
+								Manifest.permission.READ_EXTERNAL_STORAGE },
+						PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
+			}
 		}
+
 	}
 
 	@Override
 	public void onBackPressed() {
-		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	@Override
-	public boolean onNavigationItemSelected(MenuItem item) {
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 		int id = item.getItemId();
 		switch (id) {
 			case R.id.nav_ranking_list:
