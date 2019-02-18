@@ -1,6 +1,6 @@
 # HaurRankingAndroid 
 
-This is an Android application for a shooting club's ([Haukilahden urheiluampujat ry](www.haur.fi)) internal ranking based on [IPSC](http://www.ipsc.org/) classifiers scored using [PractiScore](https://practiscore.com/).
+This is an Android application for a shooting club's ([Haukilahden urheiluampujat ry](http://www.haur.fi)) internal ranking based on [IPSC](http://www.ipsc.org/) classifiers scored using [PractiScore](https://practiscore.com/).
 
 Results from [IPSC classifier stages](http://www.ipsc.org/classification/icsStages.php) scored using PractiScore can be imported into the application database and included in the ranking. The application reads the exported result data from PractiScore's match export file (.psc) and saves the selected results into its own database (an embedded SQLite database). 
 
