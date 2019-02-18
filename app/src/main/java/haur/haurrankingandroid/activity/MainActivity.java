@@ -63,9 +63,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				new RankingFragment()).commit();
 		navigationView.setCheckedItem(R.id.nav_ranking_list);
 
-		FileService.createDirectoriesIfNotExist();
-		getPermissions();
+		if (isPermissionsGranted()) {
+			FileService.createDirectoriesIfNotExist();
+		}
+		else getPermissions();
+	}
 
+
+	public boolean isPermissionsGranted() {
+		if (Build.VERSION.SDK_INT < 23) return true;
+		int writePermission = ContextCompat.checkSelfPermission(this,
+				Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		int readPermission = ContextCompat.checkSelfPermission(this,
+				Manifest.permission.READ_EXTERNAL_STORAGE);
+		return writePermission == PackageManager.PERMISSION_GRANTED
+				&& readPermission != PackageManager.PERMISSION_GRANTED;
+	}
+	private void getPermissions() {
+		ActivityCompat.requestPermissions(this,
+			new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE },
+			PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
 	}
 
 	@Override
@@ -74,28 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_READ_AND_WRITE_SDK:
 				if (grantResults.length == 0
-						|| grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+						|| grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 					finish();
 				}
-			break;
+				FileService.createDirectoriesIfNotExist();
+				RankingService.getRanking();
+				break;
 		}
-	}
-
-	private void getPermissions() {
-		if (Build.VERSION.SDK_INT >= 23) {
-			int writePermission = ContextCompat.checkSelfPermission(this,
-					Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			int readPermission = ContextCompat.checkSelfPermission(this,
-					Manifest.permission.READ_EXTERNAL_STORAGE);
-			if (writePermission != PackageManager.PERMISSION_GRANTED
-					|| readPermission != PackageManager.PERMISSION_GRANTED) {
-				ActivityCompat.requestPermissions(this,
-						new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE,
-								Manifest.permission.READ_EXTERNAL_STORAGE },
-						PERMISSIONS_REQUEST_READ_AND_WRITE_SDK);
-			}
-		}
-
 	}
 
 	@Override
@@ -110,8 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}

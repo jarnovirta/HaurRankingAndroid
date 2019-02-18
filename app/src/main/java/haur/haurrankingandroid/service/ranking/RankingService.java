@@ -2,6 +2,7 @@ package haur.haurrankingandroid.service.ranking;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.util.Log;
 
 import java.util.List;
@@ -31,7 +32,9 @@ public class RankingService {
 	}
 
 	public static void generateRanking() {
-		new GenerateRankingTask(newRanking -> ranking.postValue(newRanking)).execute();
+		new GenerateRankingTask(newRanking ->
+					ranking.postValue(newRanking)
+			).execute();
 	}
 
 	public static void saveExportedRanking(Ranking ranking) {

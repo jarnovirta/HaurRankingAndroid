@@ -1,5 +1,6 @@
 package haur.haurrankingandroid.service.task;
 
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,27 +22,30 @@ import haur.haurrankingandroid.domain.ScoreCard;
 import haur.haurrankingandroid.service.task.onPostExecuteHandler.GenerateRankingPostExecuteHandler;
 
 /**
- * Created by Jarno on 14.10.2018.
+ * Created by Jarno on 14.10.2018
  */
 
 public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 
 	private GenerateRankingPostExecuteHandler handler;
-	private Ranking oldRanking;
 	private AppDatabase db;
+	private boolean dbInitiationFailed = false;
 
 	public GenerateRankingTask(GenerateRankingPostExecuteHandler handler) {
 		this.handler = handler;
-		db = AppDatabase.getDatabase();
+		try {
+			db = AppDatabase.getDatabase();
+		}
+		catch (SQLiteCantOpenDatabaseException e) {
+			dbInitiationFailed = true;
+		}
 	}
 	@Override
 	protected Ranking doInBackground(Void... args) {
-		RankingDataChangedEntity dataChanged = db.rankingDao().getRankingDataChanged();
-		if (dataChanged != null && dataChanged.isDataChanged()) {
-			oldRanking = db.rankingDao().getRanking();
-		}
 		Ranking ranking = new Ranking();
-		ranking.setDivisionRankings(new ArrayList<DivisionRanking>());
+		if (dbInitiationFailed) return ranking;
+
+		ranking.setDivisionRankings(new ArrayList<>());
 
 		for (Division division : Division.values()) {
 			DivisionRanking divRank = generateDivisionRanking(division);
@@ -52,10 +56,14 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 	}
 
 	private DivisionRanking generateDivisionRanking(Division division) {
-
-		// Get classifiers with min. 2 results
-		List<Classifier> validClassifiers = db.scoreCardDao().getValidClassifiers(division);
-
+		List<Classifier> validClassifiers;
+		try {
+			// Get classifiers with min. 2 results
+			validClassifiers = db.scoreCardDao().getValidClassifiers(division);
+		}
+		catch (Exception e) {
+			return null;
+		}
 		// Average of top two hitfactors for a classifier
 		Map<Classifier, Double> classifierTopHitFactorsAveragesMap = new HashMap<>();
 
@@ -125,57 +133,9 @@ public class GenerateRankingTask extends AsyncTask<Void, Void, Ranking> {
 					}
 				}
 		}
-		setImprovedRanks(division, rows);
 		return rows;
 	}
 
-	private void setImprovedRanks(Division division, List<DivisionRankingRow> rows) {
-	/* TODO: muutettava niin, että käyttäjä päättää vanhan rankingin tallennuksesta
-		if (oldRanking == null) return;
-		DivisionRanking oldDivisionRanking = null;
-		for (DivisionRanking divRanking : oldRanking.getDivisionRankings()) {
-			if (divRanking.getDivision().equals(division)) {
-				oldDivisionRanking = divRanking;
-				break;
-			}
-		}
-		if (oldDivisionRanking != null) {
-
-
-			for (DivisionRankingRow row : rows) {
-				if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
-					Log.i("TEST", "JARNON TULOKSET " + rows.indexOf(row));
-				}
-				if (row.isRankedCompetitor()) {
-					if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
-						Log.i("TEST", "IS RANKED ");
-					}
-					boolean foundOldRow = false;
-					for (DivisionRankingRow oldRow : oldDivisionRanking.getRows()) {
-						if (row.getCompetitor().equals(oldRow.getCompetitor())) {
-							if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
-								Log.i("TEST", "FOUND ROW");
-								Log.i("TEST", "new index " + rows.indexOf(row));
-								Log.i("TEST", "old index " + oldDivisionRanking.getRows().indexOf(oldRow));
-							}
-							foundOldRow = true;
-
-							if (rows.indexOf(row) > oldDivisionRanking.getRows().indexOf(oldRow)) {
-								if (row.getCompetitor().getLastName().toLowerCase().equals("virta")) {
-									Log.i("TEST", "IS IMPROVEd");
-
-								}
-								row.setImprovedResult(true);
-							} else {
-								row.setImprovedResult(false);
-							}
-						}
-					}
-					if (!foundOldRow) row.setImprovedResult(true);
-				}
-			}
-		} */
-	}
 	@Override
 	protected void onPostExecute(Ranking ranking) {
 		if (handler != null) {

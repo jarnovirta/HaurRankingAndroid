@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.os.Environment;
 
 import haur.haurrankingandroid.RankingAppContext;
@@ -21,7 +22,7 @@ import haur.haurrankingandroid.domain.RankingDataChangedEntity;
 import haur.haurrankingandroid.domain.ScoreCard;
 
 /**
- * Created by Jarno on 13.10.2018.
+ * Created by Jarno on 13.10.2018
  */
 
 @TypeConverters({DomainTypeConverters.class})
@@ -29,10 +30,9 @@ import haur.haurrankingandroid.domain.ScoreCard;
 		DivisionRanking.class, DivisionRankingRow.class, RankingDataChangedEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
-	static AppDatabase database;
-
-	static String externalStorageFolder = Environment.getExternalStorageDirectory().getAbsolutePath();
-	static final String DATABASE_NAME = externalStorageFolder + "/HaurRanking/data/haur_ranking_db";
+	private static AppDatabase database;
+	private static String externalStorageFolder = Environment.getExternalStorageDirectory().getAbsolutePath();
+	private static final String DATABASE_NAME = externalStorageFolder + "/HaurRanking/data/haur_ranking_db";
 
 	public abstract MatchDao matchDao();
 
@@ -42,13 +42,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
 	public abstract RankingDao rankingDao();
 
-	public static AppDatabase getDatabase() {
-
+	public static AppDatabase getDatabase() throws SQLiteCantOpenDatabaseException {
 		if (database == null) {
 			database = Room.databaseBuilder(RankingAppContext.getAppContext(),
-					AppDatabase.class, DATABASE_NAME).build();
+						AppDatabase.class, DATABASE_NAME).build();
 		}
-
 		return database;
 	}
 

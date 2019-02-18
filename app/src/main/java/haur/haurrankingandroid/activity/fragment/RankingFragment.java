@@ -24,7 +24,7 @@ import haur.haurrankingandroid.service.ranking.RankingService;
 
 
 /**
- * Created by Jarno on 13.10.2018.
+ * Created by Jarno on 13.10.2018
  */
 
 public class RankingFragment extends ListFragment {
@@ -41,17 +41,11 @@ public class RankingFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater,
 	                         ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_ranking, container, false);
-
 		setSpinner(view);
-
 		adapter = new RankingListAdapter(this.getActivity(),
 				currentRows);
 		setListAdapter(adapter);
-
-		RankingService.getRanking().observe(this, newRanking -> {
-			Log.d("TEST", "*** SETTING RANKING VIEW WITH NEWRANKING");
-			updateView(newRanking);
-		});
+		RankingService.getRanking().observe(this, newRanking -> updateView(newRanking));
 
 		return view;
 	}
@@ -90,7 +84,6 @@ public class RankingFragment extends ListFragment {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setCurrentDivision(position);
 				adapter.notifyDataSetChanged();
-
 			}
 
 			@Override
@@ -129,7 +122,7 @@ public class RankingFragment extends ListFragment {
 				divisionSpinner.setVisibility(View.VISIBLE);
 				divisionSpinnerItems.clear();
 				for (String div : divisions) {
-					divisionSpinnerItems.add(div.toString());
+					divisionSpinnerItems.add(div);
 				}
 				((ArrayAdapter<String>) divisionSpinner.getAdapter()).notifyDataSetChanged();
 
