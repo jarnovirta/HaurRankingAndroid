@@ -2,18 +2,11 @@ package haur.haurrankingandroid.service.ranking;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.util.Log;
 
-import java.util.List;
-
-import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.service.task.GenerateRankingTask;
 import haur.haurrankingandroid.service.task.SaveExportedRankingTask;
-import haur.haurrankingandroid.service.task.SaveMatchTask;
-import haur.haurrankingandroid.service.task.onPostExecuteHandler.SaveMatchTaskResponseHandler;
-import haur.haurrankingandroid.service.test.TestDataGenerator;
 
 /**
  * Created by Jarno on 14.10.2018

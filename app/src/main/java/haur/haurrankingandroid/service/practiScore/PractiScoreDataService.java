@@ -5,14 +5,12 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
 
-import haur.haurrankingandroid.domain.Classifier;
 import haur.haurrankingandroid.domain.Competitor;
 import haur.haurrankingandroid.domain.Match;
 import haur.haurrankingandroid.domain.MatchScore;
 import haur.haurrankingandroid.domain.ScoreCard;
 import haur.haurrankingandroid.domain.Stage;
 import haur.haurrankingandroid.domain.StageScore;
-import haur.haurrankingandroid.service.task.SaveMatchTask;
 import haur.haurrankingandroid.service.file.FileService;
 
 /**

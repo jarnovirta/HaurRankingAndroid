@@ -255,15 +255,11 @@ public class ScoreCard implements Comparable<ScoreCard> {
 	}
 
 	public void setStringTimes(double[] stringTimes) {
-		Log.i("TEST", "SETSTRING CALLED");
 		if (stringTimes != null && stringTimes.length > 0) {
-			Log.i("SETTING TIMES", "SETTING TIMES");
 			this.time = 0.0;
 			for (int i = 0; i < stringTimes.length; i++) {
-				Log.i("SETTING TIMES", "TIME: " + stringTimes[i]);
 				this.time += stringTimes[i];
 			}
-			Log.i("TEST", "TOTAL " + String.valueOf(this.time));
 		}
 	}
 

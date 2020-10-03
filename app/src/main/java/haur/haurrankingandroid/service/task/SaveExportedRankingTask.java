@@ -1,11 +1,7 @@
 package haur.haurrankingandroid.service.task;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
 import haur.haurrankingandroid.data.AppDatabase;
-import haur.haurrankingandroid.domain.DivisionRanking;
-import haur.haurrankingandroid.domain.DivisionRankingRow;
 import haur.haurrankingandroid.domain.Ranking;
 import haur.haurrankingandroid.domain.RankingDataChangedEntity;
 

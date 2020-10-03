@@ -38,13 +38,8 @@ public class FileService {
 		try {
 			ContentResolver cr = RankingAppContext.getAppContext().getContentResolver();
 			InputStream is = cr.openInputStream(uri);
-			/* BufferedReader r = new BufferedReader(new InputStreamReader(is));
-			StringBuilder total = new StringBuilder();
-			for (String line; (line = r.readLine()) != null; ) {
-				total.append(line).append('\n');
-			}*/
-			InputStream inputStream = null;
-			OutputStream outputStream = null;
+
+			OutputStream outputStream;
 
 			String externalStorageFolder = Environment.getExternalStorageDirectory().getAbsolutePath();
 
@@ -58,7 +53,6 @@ public class FileService {
 			outputStream.close();
 			is.close();
 			File file = new File(externalStorageFolder + "/HaurRanking/matchImport.temp");
-			Log.i("******** TEST", "TIEDOSTO LUETTU");
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			String jsonString = PractiScoreFileParser.readPractiScoreExportFileData(file, PractiScoreFileType.MATCH_DEF);
@@ -83,24 +77,6 @@ public class FileService {
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
-	}
-
-	public static void savePdf() {
-		try {
-			String fname = "rankingtest";
-			String directoryPath = "/sdcard/HaurRanking/pdf";
-
-			String fpath = directoryPath + fname + ".pdf";
-
-			File file = new File(fpath);
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			Log.d("Main", "\n***Created file");
-
-		}
-		catch (IOException e) {
-			Log.e(TAG, e.getMessage(), e);		}
 	}
 
 	public static ClassifierSetupObject readClassifierSetupData() {

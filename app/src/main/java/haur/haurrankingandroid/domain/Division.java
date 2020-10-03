@@ -5,12 +5,13 @@ package haur.haurrankingandroid.domain;
  */
 
 public enum Division {
-		PRODUCTION, PRODUCTION_OPTICS, STANDARD, OPEN, CLASSIC, REVOLVER;
+		PRODUCTION, PRODUCTION_OPTICS, PRODUCTION_OPTICS_LIGHT, STANDARD, OPEN, CLASSIC, REVOLVER, PCC;
 
 		@Override
 		public String toString() {
-			if (this == Division.PRODUCTION_OPTICS)
-				return "Production optics";
+			if (this == Division.PRODUCTION_OPTICS) return "Production Optics";
+			if (this == Division.PRODUCTION_OPTICS_LIGHT) return "Production Optics Light";
+			if (this == Division.PCC) return "PCC";
 			return Character.toUpperCase(this.name().charAt(0)) + this.name().substring(1).toLowerCase();
 		}
 		public static Division fromString(String divisionString) {
